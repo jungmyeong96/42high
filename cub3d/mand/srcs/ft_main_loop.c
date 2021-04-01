@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 12:02:59 by junghan           #+#    #+#             */
-/*   Updated: 2021/04/01 22:57:31 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/02 06:49:32 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,23 @@ int		main_loop(t_info *info)
 	return (0);
 }
 
+void	set_map_info(t_info *info, int argc, char **argv)
+{
+	init_arr(info);
+	arg_protect(info, argc, argv);
+	open_mapfile(info, argv[1]);
+	get_file(info);
+	alloc_arr(info);
+	parse_map(info);
+	init_keys(&info->keys);
+}
+
 int		main(int argc, char **argv)
 {
 	t_info	info;
 
 	info.mlx = mlx_init();
-	init_arr(&info);
-	arg_protect(&info, argc, argv);
-	open_mapfile(&info, argv[1]);
-	get_file(&info);
-	alloc_arr(&info);
-	parse_map(&info);
-	init_keys(&info.keys);
+	set_map_info(&info, argc, argv);
 	info.win = mlx_new_window(info.mlx, info.win_wid, info.win_hei, "mlx");
 	info.img.img = mlx_new_image(info.mlx, info.win_wid, info.win_hei);
 	info.img.data = (int *)mlx_get_data_addr(info.img.img, &info.img.bpp,

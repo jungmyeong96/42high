@@ -6,7 +6,7 @@
 #    By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/22 16:07:58 by junghan           #+#    #+#              #
-#    Updated: 2021/04/02 02:40:18 by junghan          ###   ########.fr        #
+#    Updated: 2021/04/02 04:43:38 by junghan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,8 +70,8 @@ $(NAME): $(OBJS) $(LIBFT_LIB) $(MLX_LIB)
 
 bonus :$(NAME_BONUS)
 
-$(NAME_BONUS): fclean $(BONUS_OBJS) $(LIBFT_LIB) $(MLX_LIB)
-	$(CC) $(CFLAGS) $(MLXFLAGS) -o $(NAME) $(BONUS_OBJS) $(INCS)
+$(NAME_BONUS): $(BONUS_OBJS) $(LIBFT_LIB) $(MLX_LIB)
+	$(CC) $(CFLAGS) $(MLXFLAGS) -o $(NAME_BONUS) $(BONUS_OBJS) $(INCS)
 
 $(LIBFT_LIB):
 	make all -C $(LIBFT)

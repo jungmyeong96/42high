@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/02 02:06:38 by junghan           #+#    #+#             */
-/*   Updated: 2021/04/02 02:06:40 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/02 04:53:15 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,6 @@ void		save_bmp(t_info *info)
 		image_bmp(info, &info->save);
 		close(info->save.fd_b);
 		info->is_save = 0;
+		exit(0);
 	}
 }
