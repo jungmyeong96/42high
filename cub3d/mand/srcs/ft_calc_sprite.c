@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 12:22:58 by junghan           #+#    #+#             */
-/*   Updated: 2021/03/31 22:01:28 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/03 09:39:18 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,10 @@ void	calc_sprite(t_info *info)
 
 	if (!(info->sprite.sprite_ord = (int *)ft_calloc(info->sp_count,
 					sizeof(int))))
-		error_exit("[Error] sprite_ord allocation fail!\n");
+		error_exit("Error: sprite_ord allocation fail!\n");
 	if (!(info->sprite.sprite_dist = (double *)ft_calloc(info->sp_count,
 					sizeof(double))))
-		error_exit("[Error] sprite_dist allocation fail!\n");
+		error_exit("Error: sprite_dist allocation fail!\n");
 	make_sprite_arr(&info->sprite, info);
 	i = 0;
 	while (i < info->sp_count)

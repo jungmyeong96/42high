@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/02 02:06:29 by junghan           #+#    #+#             */
-/*   Updated: 2021/04/02 02:06:32 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/03 09:41:11 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ void	sp_data(t_info *info, char **data)
 	while (n < 9)
 	{
 		if (data == 0 || ft_check_extation(data[n], ".xpm") == 0)
-			error_exit("[ERROR] no such path to xpm\n!");
+			error_exit("Error: no such path to xpm\n!");
 		fd = open(data[n], O_RDONLY);
 		if (fd == -1)
-			error_exit("[ERROR] no such xpm!\n");
+			error_exit("Error: no such xpm!\n");
 		close(fd);
 		if (n == 8)
 			info->dis_wp = ft_strdup(data[n]);

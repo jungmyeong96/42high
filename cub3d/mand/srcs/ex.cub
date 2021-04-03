@@ -1,4 +1,4 @@
-R 1024 768
+R 768 768
 NO ../textures/moonn.xpm
 SO ../textures/moons.xpm
 WE ../textures/moonw.xpm

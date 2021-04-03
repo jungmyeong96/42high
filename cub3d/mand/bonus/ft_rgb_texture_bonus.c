@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/02 02:06:12 by junghan           #+#    #+#             */
-/*   Updated: 2021/04/02 02:06:15 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/03 09:41:20 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ void	tex_data(t_info *info, char *xpm_p, int n)
 	int		fd;
 
 	if (xpm_p == 0 || ft_check_extation(xpm_p, ".xpm") == 0)
-		error_exit("[ERROR] no such path to xpm\n!");
+		error_exit("Error: no such path to xpm\n!");
 	fd = open(xpm_p, O_RDONLY);
 	if (fd == -1)
-		error_exit("[ERROR] no such xpm!\n");
+		error_exit("Error: no such xpm!\n");
 	close(fd);
 	load_image(info, n, xpm_p, &info->img);
 }
@@ -70,16 +70,16 @@ void	fc_color(t_info *info, char *rgb_data, int n)
 	int		i;
 
 	if (!(rgb = ft_split(rgb_data, ',')))
-		error_exit("[ERROR] rgb data fail!\n");
+		error_exit("Error: rgb data fail!\n");
 	i = 0;
 	bin = 0;
 	while (i < 3)
 	{
 		if (!rgb[i] || !ft_only_digit(rgb[i]))
-			error_exit("[ERROR] no such rgb data!\n");
+			error_exit("Error: no such rgb data!\n");
 		temp = ft_atoi(rgb[i]);
 		if (temp > 255 || temp < 0)
-			error_exit("[ERROR] rgb range fail!\n");
+			error_exit("Error: rgb range fail!\n");
 		bin = bin * 256 + temp;
 		i++;
 	}

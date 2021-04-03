@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 11:13:19 by junghan           #+#    #+#             */
-/*   Updated: 2021/03/14 03:19:28 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/03 09:39:29 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int		open_mapfile(t_info *info, char *mapfile)
 {
 	if (!ft_check_extation(mapfile, ".cub"))
 	{
-		printf("[ERROR] Invalid file.\
+		printf("Error: Invalid file.\
 				\n[CODE] Check tha extation of the file.\n");
 		printf("\n[MAPFILE]:\n%s\n", mapfile);
 		exit(0);
@@ -24,7 +24,7 @@ int		open_mapfile(t_info *info, char *mapfile)
 	info->fd = open(mapfile, O_RDONLY);
 	if (info->fd == -1)
 	{
-		printf("[ERROR] Invalid file.\
+		printf("Error: Invalid file.\
 				\n[CODE] Check the status of the file.\n");
 		exit(0);
 	}
@@ -40,12 +40,12 @@ void	arg_protect(t_info *info, int argc, char **argv)
 		i = 0;
 		while (++i < argc)
 			;
-		error_exit("[ERROR] Just put in two arguments.\n[CODE] \
+		error_exit("Error: Just put in two arguments.\n[CODE] \
 				Too many arguments!\n\n");
 	}
 	if (argc < 2)
 	{
-		error_exit("[ERROR] Just put in two arguments.\n[CODE] \
+		error_exit("Error: Just put in two arguments.\n[CODE] \
 				Too few arguments!\n\n[ARGUMENTS]:\nNONE\n");
 		exit(0);
 	}
@@ -54,7 +54,7 @@ void	arg_protect(t_info *info, int argc, char **argv)
 		if (ft_strncmp(argv[2], "--save", 7) == 0)
 			info->is_save = 1;
 		else
-			error_exit("[ERROR] does't save command\n[COMMAND] \
+			error_exit("Error: does't save command\n[COMMAND] \
 					put in --save\n\n");
 	}
 }

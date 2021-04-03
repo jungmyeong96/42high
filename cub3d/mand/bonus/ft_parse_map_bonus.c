@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/02 02:05:40 by junghan           #+#    #+#             */
-/*   Updated: 2021/04/02 02:05:42 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/03 09:41:38 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	get_sp(t_info *info, char **data)
 	info->sp_count = info->sp2 + info->sp3 + info->sp4
 		+ info->sp5 + info->sp6 + info->sp7 + info->sp8;
 	if ((info->sprite_arr = (t_s*)ft_calloc(info->sp_count, sizeof(t_s))) == 0)
-		error_exit("[ERROR] malloc error\n");
+		error_exit("Error: malloc error\n");
 	i = -1;
 	k = 0;
 	while (data[++i])
@@ -67,7 +67,7 @@ void	valid_check(char **map, t_info *info)
 		}
 	}
 	if (flag != 1)
-		error_exit("[ERROR] map invalid \n");
+		error_exit("Error: map invalid \n");
 }
 
 char	*is_null(char *s1, char *s2)

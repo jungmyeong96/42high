@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/02 02:06:04 by junghan           #+#    #+#             */
-/*   Updated: 2021/04/02 02:06:06 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/03 09:41:27 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	get_file(t_info *info)
 		}
 		data = ft_split(line, ' ');
 		if (data == 0)
-			error_exit("[ERROR] split fail");
+			error_exit("Error: split fail");
 		if ((info->ele = check_element(info, data)) == -1)
 			check_dup(info);
 		free_dou(data);

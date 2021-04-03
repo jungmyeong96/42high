@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/02 02:02:43 by junghan           #+#    #+#             */
-/*   Updated: 2021/04/02 02:02:47 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/03 09:41:04 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	check_char(int c)
 				|| c == '6' || c == '7' || c == '8' || c == 'N' || c == 'E'
 				|| c == 'W' || c == 'S'))
 	{
-		error_exit("[ERROR] map invalid\
+		error_exit("Error: map invalid\
 				\n[CODE] another char in the map\n");
 	}
 }
@@ -29,7 +29,7 @@ void	check_back_len(char **map, int y, int j)
 
 	len = ft_strlen(map[y]);
 	if (len < j && map[y + 1][j] != 1)
-		error_exit("[ERROR] map invalid\
+		error_exit("Error: map invalid\
 				\n[CODE] back strlen is too short\n");
 }
 
@@ -39,7 +39,7 @@ void	check_front_len(char **map, int y, int j)
 
 	len = ft_strlen(map[y]);
 	if (len < j && map[y - 1][j] != 1)
-		error_exit("[ERROR] map invalid\
+		error_exit("Error: map invalid\
 				\n[CODE] front strlen is too short\n");
 }
 
@@ -51,7 +51,7 @@ void	check_one_y(char **map, int i, int j, t_info *info)
 	while (--y >= -1)
 	{
 		if (y == -1)
-			error_exit("[ERROR] map invalid\
+			error_exit("Error: map invalid\
 					\n[CODE] y up index\n");
 		check_back_len(map, y, j);
 		if (map[y][j] == '1')
@@ -62,7 +62,7 @@ void	check_one_y(char **map, int i, int j, t_info *info)
 	while (++y <= info->map_lines)
 	{
 		if (y == info->map_lines)
-			error_exit("[ERROR] map invalid\
+			error_exit("Error: map invalid\
 					\n[CODE] y down index \n");
 		check_front_len(map, y, j);
 		if (map[y][j] == '1')
@@ -86,7 +86,7 @@ void	check_one_x(char **map, int i, int j, t_info *info)
 			break ;
 		check_char(map[i][x]);
 		if (x == 0)
-			error_exit("[ERROR] map invalid\n[CODE] x_left_idx\n");
+			error_exit("Error: map invalid\n[CODE] x_left_idx\n");
 	}
 	x = j;
 	while (map[i][x] != '\0')
@@ -95,7 +95,7 @@ void	check_one_x(char **map, int i, int j, t_info *info)
 			break ;
 		check_char(map[i][x]);
 		if (map[i][++x] == '\0')
-			error_exit("[ERROR] map invalid\n[CODE] x_right_idx\n");
+			error_exit("Error: map invalid\n[CODE] x_right_idx\n");
 	}
 	check_one_y(map, i, j, info);
 }

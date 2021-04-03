@@ -273,7 +273,7 @@ public func mlx_mouse_move_swift(_ winptr:UnsafeRawPointer, _ x:Int32, _ y:Int32
 	// pt.y = sframe.size.y - frame.size.y - frame.origin.y + 1 + y
 	pt.y = sframe.size.height - frame.size.height - frame.origin.y + 22.0 + CGFloat(y)
 	CGWarpMouseCursorPosition(pt)
-	CGAssociateMouseAndMouseCursorPosition(UInt32(1))
+	CGAssociateMouseAndMouseCursorPosition(Int32(1))
 	return Int32(0);
 }
 

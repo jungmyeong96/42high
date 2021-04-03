@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 11:36:34 by junghan           #+#    #+#             */
-/*   Updated: 2021/03/17 00:01:04 by junghan          ###   ########.fr       */
+/*   Updated: 2021/04/03 10:10:57 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ static void	screen_size(t_info *info, char *w, char *h)
 	int	wh[2];
 
 	if (w == 0 || h == 0)
-		error_exit("[ERROR] width or height empty!");
+		error_exit("Error: width or height empty!");
 	if (ft_only_digit(w) == 0 || ft_only_digit(h) == 0)
-		error_exit("[ERROR] width or height not digit!");
+		error_exit("Error: width or height not digit!");
 	info->win_wid = ft_atoi(w);
 	info->win_hei = ft_atoi(h);
 	mlx_get_screen_size(info->mlx, &wh[0], &wh[1]);
@@ -27,12 +27,14 @@ static void	screen_size(t_info *info, char *w, char *h)
 		info->win_wid = wh[0];
 	if (info->win_hei > wh[1])
 		info->win_hei = wh[1];
-	if (info->win_wid < 640)
-		info->win_wid = 640;
-	if (info->win_hei < 480)
-		info->win_hei = 480;
+	if (info->win_wid < 768)
+		info->win_wid = 768;
+	if (info->win_hei < 768)
+		info->win_hei = 768;
+	if (info->win_wid != 768 || info->win_hei != 768)
+		write(1, "recommand 768 768", 18);
 	if (info->win_wid == 0 || info->win_hei == 0)
-		error_exit("[ERROR] screen size fail");
+		error_exit("Error: screen size fail");
 }
 
 static void	check_dup(t_info *info)
@@ -111,7 +113,7 @@ void		get_file(t_info *info)
 		}
 		data = ft_split(line, ' ');
 		if (data == 0)
-			error_exit("[ERROR] split fail");
+			error_exit("Error: split fail");
 		if ((info->ele = check_element(info, data)) == -1)
 		{
 			check_dup(info);
