@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 11:09:50 by junghan           #+#    #+#             */
-/*   Updated: 2021/04/01 22:58:35 by junghan          ###   ########.fr       */
+/*   Updated: 2021/05/16 19:23:49 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	start_dir2(t_info *info, char c)
 {
 	if (c == 'N')
 	{
-		info->dir_x = -(1 + 0.000001);
-		info->dir_y = 0.000001;
+		info->dir_x = -1 ;// + 0.000001);
+		info->dir_y =  0;//0.000001;
 		info->plane_x = 0;
 		info->plane_y = 0.66;
 	}

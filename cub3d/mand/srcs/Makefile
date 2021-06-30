@@ -6,7 +6,7 @@
 #    By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/22 16:07:58 by junghan           #+#    #+#              #
-#    Updated: 2021/04/02 04:43:38 by junghan          ###   ########.fr        #
+#    Updated: 2021/04/25 15:38:30 by junghan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,7 @@ MLX_LIB = libmlx.dylib
 
 INCS = -I ../libft -I ../gnl -I ../mlx
 
-MLXFLAGS = -L. -lmlx -framework OpenGL -framework Appkit -L. -lft
+MLXFLAGS = -L. -lmlx -framework OpenGL -O3 -framework Appkit -L. -lft
 
 RM = rm -f
 
