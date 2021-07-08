@@ -19,7 +19,7 @@ int	eat_to_survive(t_philos *philo, t_info *info)
 	int				ret;
 
 	ret = 3;
-	if ((prst_mili_sec() - philo->starving_time) > info->time_to_die)
+	if ((prst_mili_sec() - philo->starving_time) > g_info.time_to_die)
 	{
 		philo->die = 1;
 		return (-1);
@@ -43,9 +43,9 @@ int	eat_to_survive(t_philos *philo, t_info *info)
 
 int	sleep_after_eat(t_philos *philo, int check, t_info *info)
 {
-	if (info->limit != 0 && info->limit == philo->eat_time)
+	if (g_info.limit != 0 && g_info.limit == philo->eat_time)
 		return (-1);
-	if ((prst_mili_sec() - philo->starving_time) > info->time_to_die)
+	if ((prst_mili_sec() - philo->starving_time) > g_info.time_to_die)
 	{
 		philo->die = 1;
 		return (-1);
@@ -53,14 +53,14 @@ int	sleep_after_eat(t_philos *philo, int check, t_info *info)
 	if (check == 3)
 		return (3);
 	printf("[%lu]	|	philo[%d]	|	sleeping...		|\n", \
-			(prst_mili_sec() - info->std_time), philo->id);
-	if (info->die_flag == 0)
+			(prst_mili_sec() - g_info.std_time), philo->id);
+	if (g_info.die_flag == 0)
 	{
 		philo->die = 1;
 		return (-1);
 	}
-	for_pause(info->time_to_sleep);
-	if ((prst_mili_sec() - philo->starving_time) > info->time_to_die)
+	for_pause(g_info.time_to_sleep);
+	if ((prst_mili_sec() - philo->starving_time) > g_info.time_to_die)
 	{
 		philo->die = 1;
 		return (-1);
@@ -73,12 +73,12 @@ int	think_before_eat(t_philos *philo, int check, t_info *info)
 	unsigned long	present;
 
 	present = prst_mili_sec();
-	if ((present - philo->starving_time) > info->time_to_die)
+	if ((present - philo->starving_time) > g_info.time_to_die)
 	{
 		philo->die = 1;
 		return (-1);
 	}
 	printf("[%lu]	|	philo[%d]	|	thinking...		|\n", \
-			(prst_mili_sec() - info->std_time), philo->id);
+			(prst_mili_sec() - g_info.std_time), philo->id);
 	return (0);
 }

@@ -6,29 +6,29 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/03 18:50:32 by junghan           #+#    #+#             */
-/*   Updated: 2021/07/08 20:42:34 by junghan          ###   ########.fr       */
+/*   Updated: 2021/07/08 16:51:28 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_philo.h"
 
-void	full_philos(t_philos *philo, t_info *info)
+void	full_philos(t_philos *philo)
 {
 	unsigned long	present;
 
 	present = prst_mili_sec();
 	printf("[%lu]	|	philo[%d]	|	is full	d_d		|\n", \
-			(present - info->std_time), philo->id);
+			(present - g_info.std_time), philo->id);
 }
 
-void	starved_philos(t_philos *philo, t_info *info)
+void	starved_philos(t_philos *philo)
 {
 	unsigned long	present;
 
 	present = prst_mili_sec();
-	info->die_flag = 0;
+	g_info.die_flag = 0;
 	printf("[%lu]	|	philo[%d]	|	is dead	0_0		|\n", \
-			(present - info->std_time), philo->id);
+			(present - g_info.std_time), philo->id);
 }
 
 void	*acting(void *status)
@@ -36,31 +36,30 @@ void	*acting(void *status)
 	t_philos		*p_status;
 	int				ret;
 
+	ret = 0;
 	p_status = (t_philos *)status;
-	if (p_status->info->num_of_philos <= 1)
-		p_status->info->die_flag = 0;
-	while (p_status->info->die_flag)
+	while (g_info.die_flag)
 	{
-		ret = eat_to_survive(p_status, p_status->info);
-		if (ret < 0 || p_status->info->die_flag == 0)
+		ret = eat_to_survive(p_status);
+		if (ret < 0 || g_info.die_flag == 0)
 			break ;
-		ret = sleep_after_eat(p_status, ret, p_status->info);
-		if (ret < 0 || p_status->info->die_flag == 0)
+		ret = sleep_after_eat(p_status, ret);
+		if (ret < 0 || g_info.die_flag == 0)
 			break ;
-		ret = think_before_eat(p_status, ret, p_status->info);
-		if (ret < 0 || p_status->info->die_flag == 0)
+		ret = think_before_eat(p_status, ret);
+		if (ret < 0 || g_info.die_flag == 0)
 			break ;
 	}
-	if (p_status->info->die_flag == 0)
+	if (g_info.die_flag == 0)
 		p_status->die = 1;
 	if (p_status->die)
-		starved_philos(p_status, p_status->info);
-	else if (p_status->info->limit == p_status->eat_time)
-		full_philos(p_status, p_status->info);
+		starved_philos(p_status);
+	else if (g_info.limit == p_status->eat_time)
+		full_philos(p_status);
 	return (NULL);
 }
 
-int	kill_philos(int num, t_philos *philos, t_info *info)
+int	kill_philos(int num, t_philos *philos)
 {
 	int	i;
 	int	ret;
@@ -72,25 +71,24 @@ int	kill_philos(int num, t_philos *philos, t_info *info)
 		ret = pthread_join(philos[i].philo, (void *)&status);
 		if (ret < 0)
 			return (-1);
-		ret = pthread_mutex_destroy(&(info->forks[i]));
+		ret = pthread_mutex_destroy(&(g_info.forks[i]));
 		i++;
 	}
 	free(philos);
-	free(info->forks);
-	free(info);
+	free(g_info.forks);
 	return (ret);
 }
 
-int	have_dining(t_philos *philos, t_info *info)
+int	have_dining(t_philos *philos)
 {
 	int	i;
 	int	ret;
 
 	i = 0;
 	ret = 0;
-	while (i < info->num_of_philos)
+	while (i < g_info.num_of_philos)
 	{
-		init_philo(&philos[i], i + 1, info);
+		init_philo(&philos[i], i + 1);
 		ret = pthread_create(&philos[i].philo, NULL, acting, \
 				(void *)&philos[i]);
 		if (ret < 0)

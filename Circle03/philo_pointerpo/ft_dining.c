@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/03 18:50:32 by junghan           #+#    #+#             */
-/*   Updated: 2021/07/08 20:42:34 by junghan          ###   ########.fr       */
+/*   Updated: 2021/07/08 18:38:08 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ void	*acting(void *status)
 	t_philos		*p_status;
 	int				ret;
 
+	ret = 0;
 	p_status = (t_philos *)status;
-	if (p_status->info->num_of_philos <= 1)
-		p_status->info->die_flag = 0;
+	printf("%d \n", p_status->info->num_of_philos);
 	while (p_status->info->die_flag)
 	{
 		ret = eat_to_survive(p_status, p_status->info);
@@ -90,7 +90,11 @@ int	have_dining(t_philos *philos, t_info *info)
 	ret = 0;
 	while (i < info->num_of_philos)
 	{
+		printf("here %d %p\n", info->num_of_philos, philos[i].info);
 		init_philo(&philos[i], i + 1, info);
+		printf("ddd %d \n", info->num_of_philos);
+		printf("ddd %d \n", philos[i].info->num_of_philos);
+		printf("before %p %p\n",philos[i].info, info);
 		ret = pthread_create(&philos[i].philo, NULL, acting, \
 				(void *)&philos[i]);
 		if (ret < 0)

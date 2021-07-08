@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 15:41:48 by junghan           #+#    #+#             */
-/*   Updated: 2021/07/08 20:39:41 by junghan          ###   ########.fr       */
+/*   Updated: 2021/07/08 17:04:42 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	scheduling(t_philos *philo, int *left, int *right, t_info *info)
 {
 	while (philo->id % 2 == 0 && info->check_odd > 0)
-		usleep(1000);
+		usleep(50);
 	if (philo->id % 2 == 1 && info->check_odd > 0)
 		info->check_odd--;
 	if (philo->id % 2 == 1)
@@ -63,8 +63,7 @@ int	pick_up_fork(t_philos *philo, t_info *info)
 	return (3);
 }
 
-void	one_hand_operation(t_philos *philo, int check, \
-		unsigned long present, t_info *info)
+void	one_hand_operation(t_philos *philo, int check, unsigned long present, t_info *info)
 {
 	if (check == 1)
 	{

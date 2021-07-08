@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/03 16:06:24 by junghan           #+#    #+#             */
-/*   Updated: 2021/07/08 20:32:48 by junghan          ###   ########.fr       */
+/*   Updated: 2021/07/08 16:56:47 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,7 @@ int	check_valid(char **av, int limit, t_info *info)
 	info->std_time = prst_mili_sec();
 	info->die_flag = 1;
 	info->check_odd = (info->num_of_philos / 2) + (info->num_of_philos % 2);
+	if (info->num_of_philos < 1)
+		return (info->num_of_philos);
 	return (info->num_of_philos);
 }

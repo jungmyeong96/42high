@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/03 12:45:32 by junghan           #+#    #+#             */
-/*   Updated: 2021/07/08 20:31:26 by junghan          ###   ########.fr       */
+/*   Updated: 2021/07/08 18:24:53 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,12 @@ int	time_to_eat(char **av, t_philos *philos, t_info *info)
 	int	num;
 	int	i;
 
-	ret = ft_atoi(av[1]);
-	if (ret < 1)
-		return (-1);
 	ret = set_malloc(&philos, ret, &num, &info);
 	if (ret < 0)
 		return (-1);
 	ret = check_valid(av, 0, info);
-	if (ret < 0)
+	printf("f %d\n", info->num_of_philos);
+	if (ret < 0 || info->num_of_philos < 2)
 		return (-1);
 	i = -1;
 	while (++i < num)
@@ -43,14 +41,12 @@ int	time_to_eat_limit(char **av, t_philos *philos, t_info *info)
 	int	num;
 	int	i;
 
-	ret = ft_atoi(av[1]);
-	if (ret < 1)
-		return (-1);
 	ret = set_malloc(&philos, ret, &num, &info);
 	if (ret < 0)
 		return (-1);
 	ret = check_valid(av, 1, info);
-	if (ret < 1)
+	//printf("f %d\n", info->num_of_philos);
+	if (ret < 1 || info->num_of_philos < 2)
 		return (-1);
 	i = -1;
 	while (++i < num)
