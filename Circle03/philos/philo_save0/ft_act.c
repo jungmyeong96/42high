@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 16:18:29 by junghan           #+#    #+#             */
-/*   Updated: 2021/07/08 17:01:04 by junghan          ###   ########.fr       */
+/*   Updated: 2021/07/08 21:50:35 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	eat_to_survive(t_philos *philo, t_info *info)
 {
-	unsigned long	present;
+//	unsigned long	present;
 	int				check;
 	int				ret;
 
@@ -25,11 +25,11 @@ int	eat_to_survive(t_philos *philo, t_info *info)
 		return (-1);
 	}
 	check = pick_up_fork(philo, info);
-	present = prst_mili_sec();
+//	present = prst_mili_sec();
 	if (check == 1 || check == 2)
-		one_hand_operation(philo, check, present, info);
+		one_hand_operation(philo, check, info);
 	else if (check == 0)
-		ret = two_hand_operation(philo, present, info);
+		ret = two_hand_operation(philo, info);
 	if (ret == -1)
 	{
 		philo->die = 1;

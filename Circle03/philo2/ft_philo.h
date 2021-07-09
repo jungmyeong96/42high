@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/03 15:40:29 by junghan           #+#    #+#             */
-/*   Updated: 2021/07/08 18:37:54 by junghan          ###   ########.fr       */
+/*   Updated: 2021/07/09 11:49:03 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ unsigned long	prst_mili_sec(void);
 void			for_pause(int time);
 
 int				pick_up_fork(t_philos *philo, t_info *info);
+
 int				set_free_hand(t_philos *philo, t_info *info);
+void			set_free_mutex(t_philos *philo, t_info *info);
 int				two_hand_operation(t_philos *philo, unsigned long present, \
 				t_info *info);
 void			one_hand_operation(t_philos *philo, int check, \

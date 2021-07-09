@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 15:41:48 by junghan           #+#    #+#             */
-/*   Updated: 2021/07/08 20:39:41 by junghan          ###   ########.fr       */
+/*   Updated: 2021/07/08 22:14:30 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	scheduling(t_philos *philo, int *left, int *right, t_info *info)
 {
 	while (philo->id % 2 == 0 && info->check_odd > 0)
-		usleep(1000);
+		usleep(50);
 	if (philo->id % 2 == 1 && info->check_odd > 0)
 		info->check_odd--;
 	if (philo->id % 2 == 1)
@@ -56,16 +56,18 @@ int	pick_up_fork(t_philos *philo, t_info *info)
 		philo->eat_time++;
 		return (0);
 	}
-	else if (philo->left_hand == 1)
-		return (1);
-	else if (philo->right_hand == 1)
-		return (2);
+//	else if (philo->left_hand == 1)
+//		return (1);
+//	else if (philo->right_hand == 1)
+//		return (2);
 	return (3);
 }
 
-void	one_hand_operation(t_philos *philo, int check, \
-		unsigned long present, t_info *info)
+void	one_hand_operation(t_philos *philo, int check, t_info *info)
 {
+	unsigned long	present;
+
+	present = prst_mili_sec();
 	if (check == 1)
 	{
 		pthread_mutex_unlock(&info->forks[philo->id - 1]);
@@ -95,7 +97,7 @@ int	set_free_hand(t_philos *philo, t_info *info)
 				info->num_of_forks]);
 		return (-1);
 	}
-	philo->starving_time = present;
+	philo->starving_time = prst_mili_sec();
 	printf("[%lu]	|	philo[%d]	|	picked down left	|\n", \
 			(present - info->std_time), philo->id);
 	printf("[%lu]	|	philo[%d]	|	picked down right	|\n", \
@@ -107,11 +109,13 @@ int	set_free_hand(t_philos *philo, t_info *info)
 	return (0);
 }
 
-int	two_hand_operation(t_philos *philo, unsigned long present, t_info *info)
+int	two_hand_operation(t_philos *philo, t_info *info)
 {
 	int	ret;
+	unsigned long	present;
 
 	ret = 3;
+	present = prst_mili_sec();
 	printf("[%lu]	|	philo[%d]	|	eating...[%d]		|\n", \
 			(present - info->std_time), philo->id, philo->eat_time);
 	if (info->die_flag == 0 || (present - philo->starving_time) \
