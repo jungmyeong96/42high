@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi_base.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sonkang <sonkang@student.42seoul.kr>       +#+  +:+       +#+        */
+/*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/25 18:44:04 by sonkang           #+#    #+#             */
-/*   Updated: 2021/07/19 23:23:42 by sonkang          ###   ########.fr       */
+/*   Created: 2021/09/11 21:16:00 by junghan           #+#    #+#             */
+/*   Updated: 2021/09/13 14:00:20 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,13 @@ int	is_inbase(char *base, char c)
 	return (1);
 }
 
-static int	ft_atoi2(char *str, char *base, int *sign, int len)
+static int	ft_atoi2(char *str, char *base, int len)
 {
 	int	i;
 	int	j;
 	int	sum;
 
 	sum = 0;
-	*sign = 1;
 	i = 0;
 	while (str[i])
 	{
@@ -73,6 +72,6 @@ int	ft_atoi_base(char *str, char *base)
 	len = 0;
 	while (base[len])
 		len++;
-	result = ft_atoi2(str, base, &sign, len);
-	return (result * sign);
+	result = ft_atoi2(str, base, len);
+	return (result);
 }

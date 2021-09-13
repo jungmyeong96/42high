@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sonkang <sonkang@student.42seoul.kr>       +#+  +:+       +#+         #
+#    By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/07/16 14:31:30 by sonkang           #+#    #+#              #
-#    Updated: 2021/07/19 21:16:38 by sonkang          ###   ########.fr        #
+#    Created: 2021/09/11 21:15:18 by junghan           #+#    #+#              #
+#    Updated: 2021/09/11 21:15:22 by junghan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
