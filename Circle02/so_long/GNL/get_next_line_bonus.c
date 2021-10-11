@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sonkang <sonkang@student.42seoul.kr>       +#+  +:+       +#+        */
+/*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/17 18:58:19 by sonkang           #+#    #+#             */
-/*   Updated: 2021/08/02 23:05:34 by sonkang          ###   ########.fr       */
+/*   Created: 2021/10/11 11:03:07 by junghan           #+#    #+#             */
+/*   Updated: 2021/10/11 11:03:11 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
