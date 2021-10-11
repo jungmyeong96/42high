@@ -6,7 +6,7 @@
 /*   By: sonkang <sonkang@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 14:26:29 by sonkang           #+#    #+#             */
-/*   Updated: 2021/08/21 12:06:43 by sonkang          ###   ########.fr       */
+/*   Updated: 2021/10/10 20:47:18 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	draw_conf(t_info *info, int x, int y)
 	else if (info->map.map[x][y] == 'P')
 		draw(info, x, y, info->tex[info->map.way]);
 	else if (info->map.map[x][y] == 'V')
-		draw(info, x, y, info->tex[15 + info->map.v_d]);
+		draw(info, x, y, info->tex[(int)(15 + (y % 2) + info->map.v_d)]);
 }
 
 int	img_conv(t_info *info)

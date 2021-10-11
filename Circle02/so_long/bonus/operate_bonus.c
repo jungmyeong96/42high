@@ -6,7 +6,7 @@
 /*   By: sonkang <sonkang@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 10:58:24 by sonkang           #+#    #+#             */
-/*   Updated: 2021/08/21 12:10:23 by sonkang          ###   ########.fr       */
+/*   Updated: 2021/10/10 20:06:31 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,9 @@ void	villain(t_info *info)
 			else if (info->map.map[info->map.v_x][info->map.v_y + 1] == 'P')
 				patrol(info, 1, 1);
 			else
-				info->map.v_d = 1;
+				info->map.v_d = 2;
 		}
-		if (info->map.v_d == 1)
+		if (info->map.v_d == 2)
 		{
 			if (info->map.map[info->map.v_x][info->map.v_y - 1] == '0')
 				patrol(info, -1, 0);

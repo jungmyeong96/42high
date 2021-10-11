@@ -6,7 +6,7 @@
 /*   By: sonkang <sonkang@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 11:09:25 by sonkang           #+#    #+#             */
-/*   Updated: 2021/08/18 00:25:42 by sonkang          ###   ########.fr       */
+/*   Updated: 2021/10/10 20:04:33 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct s_info
 {
 	t_map		map;
 	t_data		fimg;
-	t_data		tex[17];
+	t_data		tex[19];
 	t_win		win;
 }				t_info;
 

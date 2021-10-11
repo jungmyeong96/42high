@@ -6,7 +6,7 @@
 /*   By: sonkang <sonkang@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 10:58:24 by sonkang           #+#    #+#             */
-/*   Updated: 2021/08/21 12:14:12 by sonkang          ###   ########.fr       */
+/*   Updated: 2021/10/10 19:21:00 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@ int	draw(t_info *info, int x, int y, t_data tex)
 void	get_texture(t_info *info)
 {
 	info->tex[0].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/grass.xpm", &info->tex[0].img_width, &info->tex[0].img_height);
+	"./texture/ozing.xpm", &info->tex[0].img_width, &info->tex[0].img_height);
 	info->tex[1].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/wall.xpm", &info->tex[1].img_width, &info->tex[1].img_height);
+	"./texture/ozing2.xpm", &info->tex[1].img_width, &info->tex[1].img_height);
 	info->tex[2].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/col1.xpm", &info->tex[2].img_width, &info->tex[2].img_height);
+	"./texture/dalgona.xpm", &info->tex[2].img_width, &info->tex[2].img_height);
 	info->tex[3].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/exit.xpm", &info->tex[3].img_width, &info->tex[3].img_height);
+	"./texture/exit_pig.xpm", &info->tex[3].img_width, &info->tex[3].img_height);
 	info->tex[4].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/fro_l.xpm", &info->tex[4].img_width, &info->tex[4].img_height);
+	"./texture/ilnamfront.xpm", &info->tex[4].img_width, &info->tex[4].img_height);
 	info->tex[0].addr = (unsigned int *)mlx_get_data_addr(info->tex[0].img, \
 	&info->tex[0].bits_per_pixel, &info->tex[0].line_length, \
 	&info->tex[0].endian);
