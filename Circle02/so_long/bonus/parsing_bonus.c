@@ -6,7 +6,7 @@
 /*   By: sonkang <sonkang@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/19 10:58:24 by sonkang           #+#    #+#             */
-/*   Updated: 2021/08/17 22:56:27 by sonkang          ###   ########.fr       */
+/*   Updated: 2021/10/11 10:43:55 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	info_init(t_info *info)
 	info->map.v_d = 0;
 	info->map.v_x = -1;
 	info->map.v_y = -1;
-
 }
 
 void	parsing(t_info *info, char *argv)

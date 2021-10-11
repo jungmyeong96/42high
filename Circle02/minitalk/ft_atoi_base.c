@@ -6,7 +6,7 @@
 /*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/11 21:16:00 by junghan           #+#    #+#             */
-/*   Updated: 2021/09/13 14:00:20 by junghan          ###   ########.fr       */
+/*   Updated: 2021/09/14 09:52:51 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	ft_atoi_base(char *str, char *base)
 {
 	int	result;
 	int	len;
-	int	sign;
 
 	if (!(is_valid(base)))
 		return (0);

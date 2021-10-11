@@ -6,7 +6,7 @@
 /*   By: sonkang <sonkang@student.42.fr>                +#+  +:+       +#+    */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/27 14:26:29 by sonkang             #+#    #+#           */
-/*   Updated: 2021/10/10 20:10:43 by junghan          ###   ########.fr       */
+/*   Updated: 2021/10/11 10:40:25 by junghan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,25 +86,25 @@ void	get_texture3(t_info *info)
 void	get_texture2(t_info *info)
 {
 	info->tex[9].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/ilnamleft.xpm", &info->tex[9].img_width, &info->tex[9].img_height);
+	"./texture/ilnl.xpm", &info->tex[9].img_width, &info->tex[9].img_height);
 	info->tex[10].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/ilnamleft2.xpm", &info->tex[10].img_width, &info->tex[10].img_height);
+	"./texture/ilnl2.xpm", &info->tex[10].img_width, &info->tex[10].img_height);
 	info->tex[11].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/ilnamback.xpm", &info->tex[11].img_width, &info->tex[11].img_height);
+	"./texture/ilnb.xpm", &info->tex[11].img_width, &info->tex[11].img_height);
 	info->tex[12].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/ilnamback2.xpm", &info->tex[12].img_width, &info->tex[12].img_height);
+	"./texture/ilnb2.xpm", &info->tex[12].img_width, &info->tex[12].img_height);
 	info->tex[13].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/ilnamfront.xpm", &info->tex[13].img_width, &info->tex[13].img_height);
+	"./texture/ilnf.xpm", &info->tex[13].img_width, &info->tex[13].img_height);
 	info->tex[14].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/ilnamfront2.xpm", &info->tex[14].img_width, &info->tex[14].img_height);
+	"./texture/ilnf2.xpm", &info->tex[14].img_width, &info->tex[14].img_height);
 	info->tex[15].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/circleright1.xpm", &info->tex[15].img_width, &info->tex[15].img_height);
+	"./texture/cir1.xpm", &info->tex[15].img_width, &info->tex[15].img_height);
 	info->tex[16].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/circleright2.xpm", &info->tex[16].img_width, &info->tex[16].img_height);
+	"./texture/cir2.xpm", &info->tex[16].img_width, &info->tex[16].img_height);
 	info->tex[17].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/circleleft1.xpm", &info->tex[17].img_width, &info->tex[17].img_height);
+	"./texture/cil1.xpm", &info->tex[17].img_width, &info->tex[17].img_height);
 	info->tex[18].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/circleleft2.xpm", &info->tex[18].img_width, &info->tex[18].img_height);
+	"./texture/cil2.xpm", &info->tex[18].img_width, &info->tex[18].img_height);
 	get_texture3(info);
 }
 
@@ -115,18 +115,18 @@ void	get_texture(t_info *info)
 	info->tex[1].img = mlx_xpm_file_to_image(info->win.mlx, \
 	"./texture/ozing2.xpm", &info->tex[1].img_width, &info->tex[1].img_height);
 	info->tex[2].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/dalgona.xpm", &info->tex[2].img_width, &info->tex[2].img_height);
+	"./texture/dalgo.xpm", &info->tex[2].img_width, &info->tex[2].img_height);
 	info->tex[3].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/dalgona3.xpm", &info->tex[3].img_width, &info->tex[3].img_height);
+	"./texture/dalgo3.xpm", &info->tex[3].img_width, &info->tex[3].img_height);
 	info->tex[4].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/dalgona2.xpm", &info->tex[4].img_width, &info->tex[4].img_height);
+	"./texture/dalgo2.xpm", &info->tex[4].img_width, &info->tex[4].img_height);
 	info->tex[5].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/dalgona.xpm", &info->tex[5].img_width, &info->tex[5].img_height);
+	"./texture/dalgo.xpm", &info->tex[5].img_width, &info->tex[5].img_height);
 	info->tex[6].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/exit_pig.xpm", &info->tex[6].img_width, &info->tex[6].img_height);
+	"./texture/exit_p.xpm", &info->tex[6].img_width, &info->tex[6].img_height);
 	info->tex[7].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/ilnamright.xpm", &info->tex[7].img_width, &info->tex[7].img_height);
+	"./texture/ilnr.xpm", &info->tex[7].img_width, &info->tex[7].img_height);
 	info->tex[8].img = mlx_xpm_file_to_image(info->win.mlx, \
-	"./texture/ilnamright2.xpm", &info->tex[8].img_width, &info->tex[8].img_height);
+	"./texture/ilnr2.xpm", &info->tex[8].img_width, &info->tex[8].img_height);
 	get_texture2(info);
 }
