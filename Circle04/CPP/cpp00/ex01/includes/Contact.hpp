@@ -1,0 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Contact.hpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: junghan <junghan@student.42seoul.kr>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/23 20:09:25 by junghan           #+#    #+#             */
+/*   Updated: 2021/11/23 20:09:47 by junghan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef CONTACT_HPP
+# define CONTACT_HPP
+
+# include <iostream>
+# include <string>
+# include <iomanip>
+# include <sstream>
+
+class Contact
+{
+    private:
+        std::string contact[5];
+    
+    public:
+        Contact();
+        void    add();
+        void    output_phonebook();
+        void    output_contact();
+};
+
+#endif
