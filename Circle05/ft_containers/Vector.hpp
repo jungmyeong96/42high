@@ -10,7 +10,7 @@
 
 namespace ft
 {
-    template< typename T > //allocator의 초기화?
+    template< typename T >
     class Vector
     {
         public:
@@ -24,7 +24,7 @@ namespace ft
             typedef VectorIterator<T const> const_iterator;
             typedef ReverseIterator<T> reverse_iterator;
             typedef ReverseIterator<T const> const_reverse_iterator;
-            //typedef Alloc allocator_type;
+            typedef std::allocator<T>  allocator_type;
             // typedef ptrdiff_t difference_type;
 
             private:
@@ -40,12 +40,11 @@ namespace ft
             explicit Vector(size_type n, const_reference val = value_type());
             template <class InputIterator>
             Vector(InputIterator start, InputIterator end,
-            		typename std::enable_if<!std::is_integral<InputIterator>::value,
-                    InputIterator>::type* = nullptr); //구현해야함
+            		typename ft::enable_if<!std::is_integral<InputIterator>::value,
+                    InputIterator>::type* = nullptr);
             Vector(const Vector & val);
             virtual ~Vector();
             Vector& operator= ( const Vector& );
-
 
             //Normal Iterators
             iterator begin() { return (iterator(this->ft_start));};   ///< 시작부분 포인터
@@ -53,13 +52,11 @@ namespace ft
             iterator end() { return (iterator(this->ft_start + this->ft_size)); };
             const_iterator end() const { return iterator(this->ft_start + this->ft_size); };
 
-
             //Reverse Iterators
             reverse_iterator rbegin() { return (reverse_iterator(this->ft_start + this->ft_size - 1));}   ///< 끝에서 하나뺀 위치 포인터 (alloc시 4바이크만큼 더 할당됨)
             const_reverse_iterator rbegin() const { return const_reverse_iterator(this->ft_start + this->ft_size - 1);};
             reverse_iterator rend() { return (reverse_iterator(this->ft_start - 1)); }; //끝은 항상 마지막 다음 포인터를 가리킴
             const_reverse_iterator rend() const { return const_reverse_iterator(this->ft_start - 1); };
-
 
             //Capacity
             size_type size() const { return (this->ft_size); };
@@ -68,7 +65,6 @@ namespace ft
             void reserve(size_type size);
             size_type capacity(void) const { return (this->ft_capacity); };
             bool empty() const {return (this->ft_size = 0); };
-
 
             //Element Access
             value_type& operator[] (size_type i) {return this->ft_start[i];};
@@ -81,22 +77,26 @@ namespace ft
             const_reference back(void) const ;
 
             //Modifiers
-            void assign(size_type, const_reference);
+            void assign(size_type, const_reference val = value_type());
             template <class InputIterator>
-            void assign(InputIterator, InputIterator);
-            void push_back(const_reference);
+            void assign(InputIterator, InputIterator,
+            		typename ft::enable_if<!std::is_integral<InputIterator>::value,
+                    InputIterator>::type* = nullptr);
+            void push_back(const_reference val = value_type());
             void pop_back(void);
-            iterator insert (iterator, const_reference);	
-            void insert (iterator, size_type, const_reference);	
+            iterator insert (iterator, const_reference val = value_type());	
+            void insert (iterator, size_type, const_reference val = value_type());	
             template <class InputIterator>
-            void insert (iterator, InputIterator, InputIterator);
+            void insert (iterator, InputIterator, InputIterator,
+            		typename ft::enable_if<!std::is_integral<InputIterator>::value,
+                    InputIterator>::type* = nullptr);
             iterator erase (iterator position);
             iterator erase (iterator first, iterator last);
             void swap (Vector & );
             void clear ();
 
             //Allocator
-            std::allocator<T> get_allocator() const { return (std::allocator<T>());} //?
+            allocator_type get_allocator() const { return (allocator_type());} //?
 
     };
 
@@ -118,7 +118,7 @@ namespace ft
     template < typename T >
     template <class InputIterator>
     Vector< T >::Vector(InputIterator start, InputIterator end,
-            typename std::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type*):
+            typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type*):
         ft_start(nullptr), ft_capacity(0), ft_size(0) //구현 필요
     {
         int len;
@@ -132,9 +132,8 @@ namespace ft
             ++len;
         }
         this->ft_start = alloc.allocate(len); //사이즈만큼 할당
-        //std::uninitialized_copy(tmp, end, this->ft_start);
         for (size_type i = 0; i < len; i++)
-            this->ft_start[i] = tmp++;
+            this->ft_start[i] = tmp[i];
         this->ft_size = len;
         this->ft_capacity = len; // +4를 해야하는지?
     }
@@ -177,11 +176,11 @@ namespace ft
     template < typename T >
     void Vector<T>::resize(size_type size, value_type val)
     {
-        this->reserve(size);
-        if (this->ft_size < size)
-            std::uninitialized_fill(this->ft_start + this->ft_size, this->ft_start + size, val);
-        if (this->ft_size > size)
-            this->ft_size = size;
+        while (this->ft_size > size)
+            pop_back();
+        while (this->ft_size < size)
+            push_back(val);
+
     }
 
     template < typename T >
@@ -191,25 +190,24 @@ namespace ft
         {
             size_type idx = this->ft_size;
             pointer tmp = alloc.allocate(size); //size가 과도하게들어오면?
-            for (size_type i = 0; i < this->ft_capacity; i++)
+            for (size_type i = 0; i < this->ft_size; i++)
 				tmp[i] = this->ft_start[i];
             while (this->ft_start + idx != this->ft_start)
             {
                 idx--;
                 alloc.destroy(this->ft_start + idx);
             }
-            alloc.deallocate(this->ft_start, this->ft_capacity);
+            //alloc.deallocate(this->ft_start, this->ft_capacity);
             this->ft_start = tmp;
             this->ft_capacity = size;
         }
     }
 
-
     template < typename T >
     typename Vector<T>::reference Vector<T>::at(size_type idx)
     {
         if (idx >= this->ft_size)
-            throw std::out_of_range("vVector::out_of_range\n");
+            throw std::out_of_range("Vector::out_of_range\n");
         return (this->ft_start[idx]);
     }
 
@@ -248,32 +246,18 @@ namespace ft
     template < typename T >
     void Vector<T>::assign(size_type size, const_reference val)
     {
-        this->reserve(size); //용량체크 clear?
-        std::uninitialized_fill(this->ft_start, this->ft_start + size, val); //size만큼 할당
-        while(this->ft_size-- > size)
-            alloc.destroy(this->ft_start + this->ft_size);
+        this->clear();
+        this->insert(this->begin(), size, val);
     }
 
     template < typename T >
     template < class InputIterator >
-    void Vector<T>::assign(InputIterator start, InputIterator end)
+    void Vector<T>::assign(InputIterator start, InputIterator end,
+            		typename ft::enable_if<!std::is_integral<InputIterator>::value,
+                    InputIterator>::type*)
     {
-        int len;
-        InputIterator tmp;
-
-        len = 0;
-        tmp = start;
-        while (start != end)
-        {
-            ++start;
-            ++len;
-        }
-        this->reserve(len); //용량체크
-        //std::uninitialized_copy(tmp, end, this->ft_start); //size만큼 할당
-        for (size_type i = 0; i < len; i++)
-            this->ft_start[i] = tmp++;
-        while(this->ft_size-- > len)
-           alloc.destroy(this->ft_start + this->ft_size);
+        this->clear();
+        this->insert(this->begin(), start, end);
     }
 
     template < typename T >
@@ -308,7 +292,11 @@ namespace ft
         idx = 0;
         while (it + idx != pos) //오버플로우로 터지면 어떡하지
             ++idx;
-        this->insert(pos, 1, val);
+        this->reserve(this->ft_size + 1);
+        std::cout << *(this->ft_start + idx) << std::endl;
+        std::uninitialized_copy(this->ft_start + idx, this->ft_start + this->ft_size, this->ft_start + idx + 1);
+        std::uninitialized_fill(this->ft_start + idx, this->ft_start + idx + 1, val);
+        this->ft_size += 1;
         return (this->begin() + idx); //새롭게 삽입된 요소 중 첫번째 요소 이터레이터
     }
 
@@ -322,54 +310,44 @@ namespace ft
         idx = 0;
         while (it + idx != pos) //오버플로우로 터지면 어떡하지
             ++idx;
-        this->reserve(this->size + n);
-        uninitialized_copy(this->ft_start + idx + 1, this->ft_start + ft_size, this->ft_start + idx + n);
-        uninitialized_fill(this->ft_start + idx, this->ft_start + idx + n, val);
+        this->reserve(this->ft_size + n);
+        std::uninitialized_copy(this->ft_start + idx, this->ft_start + this->ft_size, this->ft_start + idx + n);
+        std::uninitialized_fill(this->ft_start + idx, this->ft_start + idx + n, val);
         this->ft_size += n;
     }
 
     template < typename T >
     template <class InputIterator>
-    void Vector<T>::insert (iterator pos, InputIterator start, InputIterator end)
+    void Vector<T>::insert (iterator pos, InputIterator start, InputIterator end,
+            		typename ft::enable_if<!std::is_integral<InputIterator>::value,
+                    InputIterator>::type*)
     {
-        size_type idx;
-        iterator it;
-        InputIterator tmp;
-        int len;
-
-        tmp = start;
-        it = this->begin();
-        idx = 0;
-        while (it + idx != pos && idx < this->ft_size) //오버플로우로 터지면 어떡하지
-            ++idx;
-        len = 0;
         while (start != end)
-        {
-            ++start;
-            ++len;
-        }
-        this->reserve(this->ft_size + len);
-        std::uninitialized_copy(this->ft_start + idx, this->ft_start + ft_size, this->ft_start + len + idx);        
-        //std::uninitialized_copy(tmp, end, this->ft_start + idx);
-        for (size_type i = 0; i < len; i++)
-            this->ft_start[i] = tmp++;
-        this->ft_size += len;
+            pos = this->insert(pos, *start++) + 1;
     }
 
     template < typename T >
     typename Vector<T>::iterator Vector<T>::erase (iterator pos)
     {
-        //pos위치, 끝값 destroy?
-        std::uninitialized_copy(this->ft_start + pos + 1, this->ft_size, this->ft_start + pos);
+        iterator tmp;
+        size_type idx;
+
+        tmp = pos;
+        idx = 0;
+        while (this->begin() != tmp - idx)
+            ++idx;
+        alloc.destroy(this->ft_start + idx);
+        std::uninitialized_copy(tmp, this->end(), this->ft_start + idx);
         --this->ft_size;
+        return (pos);
     }
 
     template < typename T >
     typename Vector<T>::iterator Vector<T>::erase (iterator start, iterator end)
     {
-        //pos위치, 끝값 destroy?
-        std::uninitialized_copy(this->ft_start + end, this->ft_size, start);
-        this->ft_size -= (end - start);
+        while (start != end)
+            this->erase(end--);
+        return(start);
     }
 
     template < typename T >
@@ -383,12 +361,7 @@ namespace ft
     template < typename T >
     void Vector< T >::clear() //재할당이 보장 되지 않으며 이 함수를 호출 하여 벡터 용량 이 변경된다는 보장도 없습니다. 재할당을 강제하는 일반적인 대안은 swap 을 사용하는 것입니다 . ?? swap은 재할당보장?
     {
-        while (this->ft_start + this->size != this->ft_start)
-        {
-            --this->size;
-            alloc.destroy(this->ft_start + this->size);
-        }
-        this->ft_size = 0; //이제필요없음
+        erase(this->begin(), this->end());
     }
 
     /// Non Member Funtion
