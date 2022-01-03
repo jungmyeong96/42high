@@ -32,11 +32,6 @@ namespace ft
                 size_type ft_capacity;
                 size_type ft_size;
                 std::allocator<T> alloc;
-                //void create(size_type, const_reference);
-                //template <class InputIterator>
-                //void create(InputIterator, InputIterator);
-                void destroy ();
-                void destroy (const_iterator, const_iterator);
         
 
         public:
@@ -140,8 +135,6 @@ namespace ft
         }
         this->ft_start = alloc.allocate(len); //사이즈만큼 할당
         std::uninitialized_copy(tmp, end, this->ft_start);
-        // for (size_type i = 0; i < len; i++)
-        //     this->ft_start[i] = start[i];
         this->ft_size = len;
         this->ft_capacity = len; // +4를 해야하는지?
     }
@@ -162,40 +155,7 @@ namespace ft
     template < typename T >
     Vector< T >::~Vector()
     {
-        destroy();
-    }
-
-    template < typename T >
-    Vector< T >& Vector< T >::operator= ( const Vector< T > &rhs )
-    {
-        Vector< T > temp(rhs);
-        swap(temp);
-        return (*this);
-    }
-
-    // template < typename T >
-    // void Vector< T >::create(size_type n, const_reference val)
-    // {
-    //     this->ft_start = alloc.allocate(n);
-    //     this->ft_size = n;
-    //     std::uninitialized_fill(this->ft_start, this->ft_start + this->ft_size, val);
-    // }
-
-    // template < typename T >
-    // template <class InputIterator>
-    // void Vector< T >::create(InputIterator start, InputIterator end)
-    // {
-    //     this->ft_start = alloc.allocate(end - start); //사이즈만큼 할당
-    //     //std::uninitialized_copy(start, end, this->ft_start);
-    //     for (size_type i; i < end - start; i++)
-    //         this->ft_start[i] = start[i];
-    //     this->ft_size = end - start;
-    // }
-
-    template < typename T >
-    void Vector< T >::destroy()
-    {
-        if (ft_start)
+        if (this->ft_start)
         {
             pointer it; //iterator쓰면 destroy에서 오류
             it = (this->ft_start + this->ft_size); //임시 iterator로 바꿔야함
@@ -207,13 +167,11 @@ namespace ft
     }
 
     template < typename T >
-    void Vector< T >::destroy(const_iterator start, const_iterator end)
+    Vector< T >& Vector< T >::operator= ( const Vector< T > &rhs )
     {
-    //    if (start)
-    //    {
-            while (end != start)
-                alloc.destroy(--end); //deallocate 없이 작업함.
-    //    }
+        Vector< T > temp(rhs);
+        swap(temp);
+        return (*this);
     }
 
     template < typename T >
@@ -311,9 +269,7 @@ namespace ft
             ++len;
         }
         this->reserve(len); //용량체크
-        std::uninitialized_copy(start, end, this->ft_start); //size만큼 할당
-        // for (size_type i = 0; i < len; i++)
-        //     this->ft_start[i] = start[i];
+        std::uninitialized_copy(tmp, end, this->ft_start); //size만큼 할당
         while(this->ft_size-- > len)
            alloc.destroy(this->ft_start + this->ft_size);
     }
@@ -380,15 +336,10 @@ namespace ft
         int len;
 
         tmp = start;
-
         it = this->begin();
         idx = 0;
         while (it + idx != pos && idx < this->ft_size) //오버플로우로 터지면 어떡하지
-        {
-            std::cout << "-\n";
             ++idx;
-        }
-                                std::cout << "-------\n"<< std::endl;
         len = 0;
         while (start != end)
         {
@@ -396,27 +347,15 @@ namespace ft
             ++len;
         }
         this->reserve(this->ft_size + len);
-        std::cout << "-------\n";
-        std::uninitialized_copy(this->ft_start + idx, this->ft_start + ft_size, this->ft_start + len + idx);
-        //     std::cout << "-------\n"<< std::endl;
-        // for (size_type i = 0; i + idx < this->ft_size ; i++)
-        // {
-        //     std::cout << "-\n";
-        //     this->ft_start[i + len + idx] = this->ft_start[i + idx];
-        // }
-        std::cout << "-------\n";        
+        std::uninitialized_copy(this->ft_start + idx, this->ft_start + ft_size, this->ft_start + len + idx);        
         std::uninitialized_copy(tmp, end, this->ft_start + idx);
-                std::cout << "-------\n";
-        //             std::cout << "-------\n"<< std::endl;
-        // for (size_type i = 0; i < len; i++)
-        //     this->ft_start[i + idx] = start[i];
         this->ft_size += len;
     }
 
     template < typename T >
     typename Vector<T>::iterator Vector<T>::erase (iterator pos)
     {
-        //pos위치, 끝값 destroy
+        //pos위치, 끝값 destroy?
         std::uninitialized_copy(this->ft_start + pos + 1, this->ft_size, this->ft_start + pos);
         --this->ft_size;
     }
@@ -424,7 +363,7 @@ namespace ft
     template < typename T >
     typename Vector<T>::iterator Vector<T>::erase (iterator start, iterator end)
     {
-        //pos위치, 끝값 destroy
+        //pos위치, 끝값 destroy?
         std::uninitialized_copy(this->ft_start + end, this->ft_size, start);
         this->ft_size -= (end - start);
     }
@@ -440,7 +379,6 @@ namespace ft
     template < typename T >
     void Vector< T >::clear() //재할당이 보장 되지 않으며 이 함수를 호출 하여 벡터 용량 이 변경된다는 보장도 없습니다. 재할당을 강제하는 일반적인 대안은 swap 을 사용하는 것입니다 . ?? swap은 재할당보장?
     {
-        this->destroy(this->ft_start, this->ft_start + this->size);
         while (this->ft_start + this->size != this->ft_start)
         {
             --this->size;
