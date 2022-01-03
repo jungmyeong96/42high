@@ -27,13 +27,12 @@ namespace ft
             typedef std::allocator<T>  allocator_type;
             // typedef ptrdiff_t difference_type;
 
-            private:
-                pointer ft_start;
-                size_type ft_capacity;
-                size_type ft_size;
-                std::allocator<T> alloc;
+        private:
+            pointer ft_start;
+            size_type ft_capacity;
+            size_type ft_size;
+            std::allocator<T> alloc;
         
-
         public:
             //Canonical
             explicit Vector();
@@ -97,14 +96,13 @@ namespace ft
 
             //Allocator
             allocator_type get_allocator() const { return (allocator_type());} //?
-
     };
 
     template < typename T >
     Vector< T >::Vector(): ft_start(nullptr), ft_capacity(0), ft_size(0) 
     {
         this->ft_start = alloc.allocate(0);
-    };
+    }
 
     template < typename T >
     Vector< T >::Vector(size_type n, const_reference val): ft_start(nullptr), ft_capacity(0), ft_size(0)
@@ -286,17 +284,11 @@ namespace ft
     typename Vector<T>::iterator Vector<T>::insert (iterator pos, const_reference val)
     {
         size_type idx;
-        iterator it;
         
-        it = this->begin();
         idx = 0;
-        while (it + idx != pos) //오버플로우로 터지면 어떡하지
+        while (this->begin() + idx != pos) //오버플로우로 터지면 어떡하지
             ++idx;
-        this->reserve(this->ft_size + 1);
-        std::cout << *(this->ft_start + idx) << std::endl;
-        std::uninitialized_copy(this->ft_start + idx, this->ft_start + this->ft_size, this->ft_start + idx + 1);
-        std::uninitialized_fill(this->ft_start + idx, this->ft_start + idx + 1, val);
-        this->ft_size += 1;
+        insert(pos, 1, val);
         return (this->begin() + idx); //새롭게 삽입된 요소 중 첫번째 요소 이터레이터
     }
 
@@ -304,14 +296,13 @@ namespace ft
     void Vector<T>::insert (iterator pos, size_type n, const_reference val)
     {
         size_type idx;
-        iterator it;
         
-        it = this->begin();
         idx = 0;
-        while (it + idx != pos) //오버플로우로 터지면 어떡하지
+        while (this->begin() + idx != pos) //오버플로우로 터지면 어떡하지
             ++idx;
         this->reserve(this->ft_size + n);
-        std::uninitialized_copy(this->ft_start + idx, this->ft_start + this->ft_size, this->ft_start + idx + n);
+        for (size_type tmp = this->ft_size; tmp > idx ; tmp--)
+            ft_start[tmp] = ft_start[tmp - n];
         std::uninitialized_fill(this->ft_start + idx, this->ft_start + idx + n, val);
         this->ft_size += n;
     }
