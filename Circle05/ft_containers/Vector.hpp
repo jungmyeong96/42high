@@ -98,8 +98,6 @@ namespace ft
             //Allocator
             std::allocator<T> get_allocator() const { return (std::allocator<T>());} //?
 
-
-    
     };
 
     template < typename T >
@@ -134,7 +132,9 @@ namespace ft
             ++len;
         }
         this->ft_start = alloc.allocate(len); //사이즈만큼 할당
-        std::uninitialized_copy(tmp, end, this->ft_start);
+        //std::uninitialized_copy(tmp, end, this->ft_start);
+        for (size_type i = 0; i < len; i++)
+            this->ft_start[i] = tmp++;
         this->ft_size = len;
         this->ft_capacity = len; // +4를 해야하는지?
     }
@@ -269,7 +269,9 @@ namespace ft
             ++len;
         }
         this->reserve(len); //용량체크
-        std::uninitialized_copy(tmp, end, this->ft_start); //size만큼 할당
+        //std::uninitialized_copy(tmp, end, this->ft_start); //size만큼 할당
+        for (size_type i = 0; i < len; i++)
+            this->ft_start[i] = tmp++;
         while(this->ft_size-- > len)
            alloc.destroy(this->ft_start + this->ft_size);
     }
@@ -348,7 +350,9 @@ namespace ft
         }
         this->reserve(this->ft_size + len);
         std::uninitialized_copy(this->ft_start + idx, this->ft_start + ft_size, this->ft_start + len + idx);        
-        std::uninitialized_copy(tmp, end, this->ft_start + idx);
+        //std::uninitialized_copy(tmp, end, this->ft_start + idx);
+        for (size_type i = 0; i < len; i++)
+            this->ft_start[i] = tmp++;
         this->ft_size += len;
     }
 
