@@ -53,10 +53,6 @@ namespace ft
                 VectorIterator tmp(*this);
                 return (tmp += val);
             }
-            friend VectorIterator operator+(difference_type n, const VectorIterator<T, B>& x)
-            {
-                return VectorIterator<T, B>(x + n);
-            }
             VectorIterator &operator+=(int val)
             {
                 this->ptr += val;
@@ -186,6 +182,11 @@ namespace ft
                 return (ptr);
             }
         };
+        template<typename T, bool B>
+        VectorIterator<T, B> operator+(std::ptrdiff_t n, const VectorIterator<T, B>& x)
+        {
+            return VectorIterator<T, B>(x + n);
+        }
 };
 
 

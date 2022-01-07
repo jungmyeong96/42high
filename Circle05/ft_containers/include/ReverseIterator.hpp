@@ -39,7 +39,7 @@ namespace ft
             { 
                 pointer tmp;
                 tmp = ptr;
-                return (*--tmp); 
+                return (*(--tmp)); 
             }
             pointer operator->() { return (&operator*()); }
             reference operator[](int idx) const { return (*(*this + idx)); }
@@ -50,10 +50,6 @@ namespace ft
                 reverse_iterator tmp(*this);
                 tmp.ptr -= val;
                 return (tmp);
-            }
-            friend reverse_iterator operator+(difference_type n, const reverse_iterator<T, B>& x)
-            {
-                return reverse_iterator<T, B>(x.getptr() - n);
             }
             reverse_iterator &operator+=(int val)
             {
@@ -78,10 +74,6 @@ namespace ft
                 reverse_iterator tmp(*this);
                 tmp.ptr += val;
                 return (tmp);
-            }
-            friend difference_type operator-(const reverse_iterator<T, B>& x, const reverse_iterator<T, B>& y)
-            {
-                return y.getptr() - x.getptr(); //비멤버를 멤버에 넣기위해 friend
             }
             reverse_iterator &operator-=(int val)
             {
@@ -184,7 +176,17 @@ namespace ft
                 return (ptr);
             }
     };
-
+    template <class T, bool B>
+    reverse_iterator<T, B> operator+(std::ptrdiff_t n, const reverse_iterator<T, B>& x)
+    {
+        return reverse_iterator<T, B>(x.getptr() - n);
+    }
+    
+    template <class T, bool B>
+    std::ptrdiff_t operator-(const reverse_iterator<T, !B>& x, const reverse_iterator<T, B>& y)
+    {
+        return y.getptr() - x.getptr(); //비멤버를 멤버에 넣기위해 friend
+    }
 
 }
 

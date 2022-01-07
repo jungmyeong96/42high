@@ -180,7 +180,7 @@ namespace ft
                 idx--;
                 alloc.destroy(this->ft_start + idx);
             }
-            //alloc.deallocate(this->ft_start, this->ft_capacity);
+            alloc.deallocate(this->ft_start, this->ft_capacity);
             this->ft_start = tmp;
             this->ft_capacity = size;
         }
