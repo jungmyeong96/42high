@@ -1,10 +1,9 @@
 #include "../include/Vector.hpp"
-#include "Vector.hpp"
 #include <vector>
 
 
 template <typename T>
-void	printcont(ft::vector<T> const &vector)
+void	printcont(ft::Vector<T> const &vector)
 {
 	typename ft::Vector<T>::const_iterator it = vector.begin();
 	typename ft::Vector<T>::const_iterator ite = vector.end();

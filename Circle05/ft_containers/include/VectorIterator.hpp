@@ -5,14 +5,25 @@
 
 namespace ft
 {
+
+    template < typename T , bool B>
+    struct iterator_traits
+    {
+        typedef T value_type; //타입지정
+        typedef typename ChooseConst<B, T&, const T&>::type     reference;
+        typedef typename ChooseConst<B, T*, const T*>::type     pointer;
+        typedef std::ptrdiff_t difference_type;
+    };
+
     template <class T, bool B>
     class VectorIterator
     {
         public:
-            typedef T value_type;
-            typedef typename ChooseConst<B, T&, const T&>::type     reference;
-            typedef typename ChooseConst<B, T*, const T*>::type     pointer;
-            typedef std::ptrdiff_t difference_type;
+            typedef iterator_traits<T, B>               iterator_traits;
+            typedef typename iterator_traits::value_type         value_type;
+            typedef typename iterator_traits::reference          reference;
+            typedef typename iterator_traits::pointer            pointer;
+            typedef typename iterator_traits::difference_type    difference_type;
         private :
             pointer ptr;
             
@@ -26,7 +37,7 @@ namespace ft
             VectorIterator &operator=(VectorIterator const &tmp)
             {
                 if (this != &tmp)
-                    this->ptr = tmp.ptr;
+                    this->ptr = tmp.getptr();
                 return (*this);
             }
 
@@ -174,7 +185,6 @@ namespace ft
             {
                 return (ptr);
             }
-
         };
 };
 

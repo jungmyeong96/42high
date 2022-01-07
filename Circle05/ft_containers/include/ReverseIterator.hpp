@@ -5,27 +5,28 @@
 
 namespace ft
 {
-      template <class T, bool B>
-    class ReverseIterator
+    template <class T, bool B>
+    class reverse_iterator
     {
         public:
-            typedef T value_type;
-            typedef typename ChooseConst<B, T&, const T&>::type     reference;
-            typedef typename ChooseConst<B, T*, const T*>::type     pointer;
-            typedef std::ptrdiff_t difference_type;
+            typedef iterator_traits<T, B>               iterator_traits;
+            typedef typename iterator_traits::value_type         value_type;
+            typedef typename iterator_traits::reference          reference;
+            typedef typename iterator_traits::pointer            pointer;
+            typedef typename iterator_traits::difference_type    difference_type;
 		private:
 			pointer	ptr;
 
 		public:
-			ReverseIterator(void) : ptr(0) {}
-			ReverseIterator(pointer ptr) : ptr(ptr) {};
-			ReverseIterator(const ReverseIterator<T, false> &tmp): ptr(tmp.getptr()) {};
-            explicit ReverseIterator(const VectorIterator<T, B>& copy) { ptr = copy.getptr(); } //reverse형에 iterator형넣기
-			~ReverseIterator() {};
+			reverse_iterator(void) : ptr(0) {}
+			reverse_iterator(pointer ptr) : ptr(ptr) {};
+			reverse_iterator(const reverse_iterator<T, false> &tmp): ptr(tmp.getptr()) {};
+            explicit reverse_iterator(const VectorIterator<T, B>& copy) { ptr = copy.getptr(); } //reverse형에 iterator형넣기
+			~reverse_iterator() {};
 			VectorIterator<T, B> base() const { return this->ptr; };
 
             //Operator Assign
-			ReverseIterator& operator=(const ReverseIterator &tmp)
+			reverse_iterator& operator=(const reverse_iterator &tmp)
 			{
 				if (this != &tmp)
 					ptr = tmp.getptr();
@@ -44,136 +45,136 @@ namespace ft
             reference operator[](int idx) const { return (*(*this + idx)); }
 
             //Plus Operation
-            ReverseIterator operator+(int val) const
+            reverse_iterator operator+(int val) const
             {
-                ReverseIterator tmp(*this);
+                reverse_iterator tmp(*this);
                 tmp.ptr -= val;
                 return (tmp);
             }
-            friend ReverseIterator operator+(difference_type n, const ReverseIterator<T, B>& x)
+            friend reverse_iterator operator+(difference_type n, const reverse_iterator<T, B>& x)
             {
-                return ReverseIterator<T, B>(x.ptr - n);
+                return reverse_iterator<T, B>(x.getptr() - n);
             }
-            ReverseIterator &operator+=(int val)
+            reverse_iterator &operator+=(int val)
             {
                 this->ptr -= val;
                 return (*this);
             }
-            ReverseIterator operator++(int)//후위
+            reverse_iterator operator++(int)//후위
             {
-                ReverseIterator tmp(*this);
+                reverse_iterator tmp(*this);
                 --this->ptr;
                 return (tmp);
             }
-            ReverseIterator &operator++()//전위
+            reverse_iterator &operator++()//전위
             {
                 --this->ptr;
                 return (*this);
             }
 
             //Minus Operation
-            ReverseIterator operator-(int val) const
+            reverse_iterator operator-(int val) const
             {
-                ReverseIterator tmp(*this);
+                reverse_iterator tmp(*this);
                 tmp.ptr += val;
                 return (tmp);
             }
-            friend difference_type operator-(const ReverseIterator<T, B>& x, const ReverseIterator<T, B>& y)
+            friend difference_type operator-(const reverse_iterator<T, B>& x, const reverse_iterator<T, B>& y)
             {
-                return y.ptr - x.ptr; //비멤버를 멤버에 넣기위해 friend
+                return y.getptr() - x.getptr(); //비멤버를 멤버에 넣기위해 friend
             }
-            ReverseIterator &operator-=(int val)
+            reverse_iterator &operator-=(int val)
             {
                 this->ptr += val;
                 return (*this);
             }
-            ReverseIterator operator--(int)
+            reverse_iterator operator--(int)
             {
-                ReverseIterator tmp(*this);
+                reverse_iterator tmp(*this);
                 ++this->ptr;
                 return(tmp);
             }
-            ReverseIterator &operator--()
+            reverse_iterator &operator--()
             {
                 ++this->ptr;
                 return (*this);
         	}
 
             //Operator compare 반대로해야하지않나? 체크해봐야함
-            bool operator==(const ReverseIterator &other) const
+            bool operator==(const reverse_iterator &other) const
             {
                 if (this->ptr == other.getptr())
                     return (1);
                 return (0);
             }
-            bool operator==(const ReverseIterator<T, !B> &other) const
+            bool operator==(const reverse_iterator<T, !B> &other) const
             {
-                ReverseIterator<T, true> ano = other;  
+                reverse_iterator<T, true> ano = other;  
                 if (this->ptr == other.getptr())
                     return (1);
                 return (0);
             }
-            bool operator!=(const ReverseIterator &other) const
+            bool operator!=(const reverse_iterator &other) const
             {
                 if (this->ptr != other.getptr())
                     return (1);
                 return (0);
             }
-            bool operator!=(const ReverseIterator<T, !B> &other) const // const랑 non const비교할 경우 처리
+            bool operator!=(const reverse_iterator<T, !B> &other) const // const랑 non const비교할 경우 처리
             {
-                ReverseIterator<T, true> ano = other;  
+                reverse_iterator<T, true> ano = other;  
                 if (this->ptr != ano.getptr())
                     return (1);
                 return (0);
             }
-            bool operator>(const ReverseIterator &other) const
+            bool operator>(const reverse_iterator &other) const
 			{
 				if (this->ptr < other.getptr())
 					return (1);
 				return (0);
 			}
-            bool operator>(const ReverseIterator<T, !B> &other) const // const랑 non const비교할 경우 처리
+            bool operator>(const reverse_iterator<T, !B> &other) const // const랑 non const비교할 경우 처리
             {
-                ReverseIterator<T, true> ano = other;  
+                reverse_iterator<T, true> ano = other;  
                 if (this->ptr < ano.getptr())
                     return (1);
                 return (0);
             }
-			bool operator<(const ReverseIterator &other) const
+			bool operator<(const reverse_iterator &other) const
 			{
 				if (this->ptr > other.getptr())
 					return (1);
                 return (0);
 			}
-            bool operator<(const ReverseIterator<T, !B> &other) const // const랑 non const비교할 경우 처리
+            bool operator<(const reverse_iterator<T, !B> &other) const // const랑 non const비교할 경우 처리
             {
-                ReverseIterator<T, true> ano = other;  
+                reverse_iterator<T, true> ano = other;  
                 if (this->ptr > ano.getptr())
                     return (1);
                 return (0);
             }
-			bool operator>=(const ReverseIterator &other) const
+			bool operator>=(const reverse_iterator &other) const
 			{
 				if (this->ptr <= other.getptr())
 					return (1);
                 return (0);
 			}
-            bool operator>=(const ReverseIterator<T, !B> &other) const // const랑 non const비교할 경우 처리
+            bool operator>=(const reverse_iterator<T, !B> &other) const // const랑 non const비교할 경우 처리
             {
-                ReverseIterator<T, true> ano = other;  
+                reverse_iterator<T, true> ano = other;  
                 if (this->ptr <= ano.getptr())
                     return (1);
                 return (0);
             }
-			bool operator<=(const ReverseIterator &other) const
+			bool operator<=(const reverse_iterator &other) const
 			{
 				if (this->ptr >= other.getptr())
 					return (1);
                 return (0);
 			}
-            bool operator<=(const ReverseIterator<T, !B> &other) const // const랑 non const비교할 경우 처리
+            bool operator<=(const reverse_iterator<T, !B> &other) const // const랑 non const비교할 경우 처리
             {
-                ReverseIterator<T, true> ano = other;  
+                reverse_iterator<T, true> ano = other;  
                 if (this->ptr >= ano.getptr())
                     return (1);
                 return (0);

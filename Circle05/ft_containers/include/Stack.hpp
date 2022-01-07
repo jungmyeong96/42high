@@ -35,12 +35,12 @@ namespace ft
             void push(const value_type& val)    { ctnr.push_back(val); };
             void pop()                          { ctnr.pop_back(); };
 
-            friend bool operator==(const stack& lhs, const stack& rhs)  { return lhs.ctnr == rhs.ctnr; };
-            friend bool operator!=(const stack& lhs, const stack& rhs)  { return lhs.ctnr != rhs.ctnr; };
-            friend bool operator<(const stack& lhs, const stack& rhs)   { return lhs.ctnr < rhs.ctnr; };
-            friend bool operator<=(const stack& lhs, const stack& rhs)  { return lhs.ctnr <= rhs.ctnr; };
-            friend bool operator>(const stack& lhs, const stack& rhs)   { return lhs.ctnr > rhs.ctnr; };
-            friend bool operator>=(const stack& lhs, const stack& rhs)  { return lhs.ctnr >= rhs.ctnr; };
+            friend bool operator==(const Stack& lhs, const Stack& rhs)  { return lhs.ctnr == rhs.ctnr; };
+            friend bool operator!=(const Stack& lhs, const Stack& rhs)  { return lhs.ctnr != rhs.ctnr; };
+            friend bool operator<(const Stack& lhs, const Stack& rhs)   { return lhs.ctnr < rhs.ctnr; };
+            friend bool operator<=(const Stack& lhs, const Stack& rhs)  { return lhs.ctnr <= rhs.ctnr; };
+            friend bool operator>(const Stack& lhs, const Stack& rhs)   { return lhs.ctnr > rhs.ctnr; };
+            friend bool operator>=(const Stack& lhs, const Stack& rhs)  { return lhs.ctnr >= rhs.ctnr; };
     };
 }
 
