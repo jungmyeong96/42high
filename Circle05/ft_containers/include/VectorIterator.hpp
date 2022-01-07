@@ -1,7 +1,7 @@
 #ifndef VECTOR_ITERATOR_HPP
 # define VECTOR_ITERATOR_HPP
 
-# include "spacialized_tp.hpp"
+# include "SpacializedTp.hpp"
 
 namespace ft
 {

@@ -1,16 +1,16 @@
-#ifndef vector_HPP
-#define vector_HPP
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 
 # include <iostream>
 # include <memory>
 # include "VectorIterator.hpp"
 # include "ReverseIterator.hpp"
-# include "spacialized_tp.hpp"
+# include "SpacializedTp.hpp"
 
 namespace ft
 {
     template< typename T, typename Alloc = std::allocator<T> >
-    class vector
+    class Vector
     {
         public:
             typedef T value_type; //타입지정
@@ -34,15 +34,15 @@ namespace ft
         
         public:
             //Canonical
-            explicit vector();
-            explicit vector(size_type n, const_reference val = value_type());
+            explicit Vector();
+            explicit Vector(size_type n, const_reference val = value_type());
             template <class InputIterator>
-            vector(InputIterator start, InputIterator end,
+            Vector(InputIterator start, InputIterator end,
             		typename ft::enable_if<!std::is_integral<InputIterator>::value,
                     InputIterator>::type* = nullptr);
-            vector(const vector & val);
-            virtual ~vector();
-            vector& operator= ( const vector& );
+            Vector(const Vector & val);
+            virtual ~Vector();
+            Vector& operator= ( const Vector& );
 
             //Normal Iterators
             iterator begin() { return (iterator(this->ft_start));};   ///< 시작부분 포인터
@@ -90,7 +90,7 @@ namespace ft
                     InputIterator>::type* = nullptr);
             iterator erase (iterator position);
             iterator erase (iterator first, iterator last);
-            void swap (vector & );
+            void swap (Vector & );
             void clear ();
 
             //Allocator
@@ -99,13 +99,13 @@ namespace ft
     };
 
     template < typename T , typename Alloc >
-    vector< T, Alloc >::vector(): ft_start(nullptr), ft_capacity(0), ft_size(0) 
+    Vector< T, Alloc >::Vector(): ft_start(nullptr), ft_capacity(0), ft_size(0) 
     {
         this->ft_start = alloc.allocate(0);
     }
 
     template < typename T , typename Alloc >
-    vector< T, Alloc >::vector(size_type n, const_reference val): ft_start(nullptr), ft_capacity(0), ft_size(0)
+    Vector< T, Alloc >::Vector(size_type n, const_reference val): ft_start(nullptr), ft_capacity(0), ft_size(0)
     {
         this->ft_start = alloc.allocate(n);
         this->ft_size = n;
@@ -115,7 +115,7 @@ namespace ft
 
     template < typename T , typename Alloc >
     template <class InputIterator>
-    vector< T, Alloc >::vector(InputIterator start, InputIterator end,
+    Vector< T, Alloc >::Vector(InputIterator start, InputIterator end,
             typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type*):
         ft_start(nullptr), ft_capacity(0), ft_size(0) //구현 필요
     {
@@ -123,7 +123,7 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    vector< T, Alloc >::vector(const vector & val): //복사생성자
+    Vector< T, Alloc >::Vector(const Vector & val): //복사생성자
         ft_start(nullptr), ft_capacity(0), ft_size(0)
     {
         if (this != &val)
@@ -136,7 +136,7 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    vector< T, Alloc >::~vector()
+    Vector< T, Alloc >::~Vector()
     {
         if (this->ft_start)
         {
@@ -150,15 +150,15 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    vector< T, Alloc >& vector< T, Alloc >::operator= ( const vector< T, Alloc > &rhs )
+    Vector< T, Alloc >& Vector< T, Alloc >::operator= ( const Vector< T, Alloc > &rhs )
     {
-        vector< T, Alloc > temp(rhs);
+        Vector< T, Alloc > temp(rhs);
         swap(temp);
         return (*this);
     }
 
     template < typename T , typename Alloc >
-    void vector< T, Alloc >::resize(size_type size, value_type val)
+    void Vector< T, Alloc >::resize(size_type size, value_type val)
     {
         while (this->ft_size > size)
             pop_back();
@@ -168,7 +168,7 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    void vector< T, Alloc >::reserve(size_type size)
+    void Vector< T, Alloc >::reserve(size_type size)
     {
         if (this->ft_capacity < size)
         {
@@ -188,47 +188,47 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    typename vector< T, Alloc >::reference vector< T, Alloc >::at(size_type idx)
+    typename Vector< T, Alloc >::reference Vector< T, Alloc >::at(size_type idx)
     {
         if (idx >= this->ft_size)
-            throw std::out_of_range("vector::out_of_range\n");
+            throw std::out_of_range("Vector::out_of_range\n");
         return (this->ft_start[idx]);
     }
 
     template < typename T , typename Alloc >
-    typename vector< T, Alloc >::const_reference vector< T, Alloc >::at(size_type idx) const
+    typename Vector< T, Alloc >::const_reference Vector< T, Alloc >::at(size_type idx) const
     {
         if (idx >= this->ft_size)
-            throw std::out_of_range("vector::out_of_range\n");
+            throw std::out_of_range("Vector::out_of_range\n");
         return (this->ft_start[idx]);
     }
 
     template < typename T , typename Alloc >
-    typename vector< T, Alloc >::reference vector< T, Alloc >::front(void) 
+    typename Vector< T, Alloc >::reference Vector< T, Alloc >::front(void) 
     {
 		return (this->ft_start[0]);
 	}
 
     template < typename T , typename Alloc >
-	typename vector< T, Alloc >::const_reference vector< T, Alloc >::front(void) const 
+	typename Vector< T, Alloc >::const_reference Vector< T, Alloc >::front(void) const 
     {
 		return (this->ft_start[0]);
 	}
 
     template < typename T , typename Alloc >
-	typename vector< T, Alloc >::reference vector< T, Alloc >::back(void) 
+	typename Vector< T, Alloc >::reference Vector< T, Alloc >::back(void) 
     {
 		return (this->ft_start[this->ft_size - 1]);
 	}
 
     template < typename T , typename Alloc >
-	typename vector< T, Alloc >::const_reference vector< T, Alloc >::back(void) const 
+	typename Vector< T, Alloc >::const_reference Vector< T, Alloc >::back(void) const 
     {
 		return (this->ft_start[this->ft_size - 1]);
 	}
 
     template < typename T , typename Alloc >
-    void vector< T, Alloc >::assign(size_type size, const_reference val)
+    void Vector< T, Alloc >::assign(size_type size, const_reference val)
     {
         this->clear();
         this->insert(this->begin(), size, val);
@@ -236,7 +236,7 @@ namespace ft
 
     template < typename T , typename Alloc >
     template < class InputIterator >
-    void vector< T, Alloc >::assign(InputIterator start, InputIterator end,
+    void Vector< T, Alloc >::assign(InputIterator start, InputIterator end,
             		typename ft::enable_if<!std::is_integral<InputIterator>::value,
                     InputIterator>::type*)
     {
@@ -245,7 +245,7 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-	void vector< T, Alloc >::push_back(const_reference val)
+	void Vector< T, Alloc >::push_back(const_reference val)
     {
 		if (this->ft_size == this->ft_capacity)
         {
@@ -260,14 +260,14 @@ namespace ft
 	}
 
     template < typename T , typename Alloc >
-	void vector< T, Alloc >::pop_back(void)
+	void Vector< T, Alloc >::pop_back(void)
     {
         if (this->ft_size)
             this->ft_size--;
     }
 
     template < typename T , typename Alloc >
-    typename vector< T, Alloc >::iterator vector< T, Alloc >::insert (iterator pos, const_reference val)
+    typename Vector< T, Alloc >::iterator Vector< T, Alloc >::insert (iterator pos, const_reference val)
     {
         size_type idx;
         
@@ -279,7 +279,7 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    void vector< T, Alloc >::insert (iterator pos, size_type n, const_reference val)
+    void Vector< T, Alloc >::insert (iterator pos, size_type n, const_reference val)
     {
         size_type idx;
         iterator old_end;
@@ -296,7 +296,7 @@ namespace ft
 
     template < typename T , typename Alloc >
     template <class InputIterator>
-    void vector< T, Alloc >::insert (iterator pos, InputIterator start, InputIterator end,
+    void Vector< T, Alloc >::insert (iterator pos, InputIterator start, InputIterator end,
             		typename ft::enable_if<!std::is_integral<InputIterator>::value,
                     InputIterator>::type*)
     {
@@ -305,13 +305,13 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    typename vector< T, Alloc >::iterator vector< T, Alloc >::erase (iterator pos)
+    typename Vector< T, Alloc >::iterator Vector< T, Alloc >::erase (iterator pos)
     {
         	return (this->erase(pos, pos + 1));
     }
 
     template < typename T , typename Alloc >
-    typename vector< T, Alloc >::iterator vector< T, Alloc >::erase (iterator start, iterator end)
+    typename Vector< T, Alloc >::iterator Vector< T, Alloc >::erase (iterator start, iterator end)
     {
         iterator tmp = start;
 	    size_type deleted = end - start;
@@ -328,7 +328,7 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    void vector< T, Alloc >::swap ( vector< T, Alloc > &rhs )
+    void Vector< T, Alloc >::swap ( Vector< T, Alloc > &rhs )
     {
         std::swap( ft_start, rhs.ft_start );
         std::swap( ft_size, rhs.ft_size );
@@ -336,46 +336,46 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    void vector< T, Alloc >::clear() //재할당이 보장 되지 않으며 이 함수를 호출 하여 벡터 용량 이 변경된다는 보장도 없습니다. 재할당을 강제하는 일반적인 대안은 swap 을 사용하는 것입니다 . ?? swap은 재할당보장?
+    void Vector< T, Alloc >::clear() //재할당이 보장 되지 않으며 이 함수를 호출 하여 벡터 용량 이 변경된다는 보장도 없습니다. 재할당을 강제하는 일반적인 대안은 swap 을 사용하는 것입니다 . ?? swap은 재할당보장?
     {
         erase(this->begin(), this->end());
     }
 
     /// Non Member Funtion
     template < typename T , typename Alloc >
-    bool operator==(vector< T, Alloc > const &lhs, vector< T, Alloc > const &rhs) {
+    bool operator==(Vector< T, Alloc > const &lhs, Vector< T, Alloc > const &rhs) {
         if (lhs.size() != rhs.size())
             return (false);
         return(ft::equal(lhs.begin(), lhs.end(), rhs.begin())); //재구현해야함
     }
 
     template < typename T , typename Alloc >
-    bool operator!=(vector< T, Alloc > const &lhs, vector< T, Alloc > const &rhs) {
+    bool operator!=(Vector< T, Alloc > const &lhs, Vector< T, Alloc > const &rhs) {
         return (!(lhs == rhs));
     }
 
     template < typename T , typename Alloc >
-    bool operator<(vector< T, Alloc > const &lhs, vector< T, Alloc > const &rhs) {
+    bool operator<(Vector< T, Alloc > const &lhs, Vector< T, Alloc > const &rhs) {
         return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); //재구현해야함
     }
 
     template < typename T , typename Alloc >
-    bool operator<=(vector< T, Alloc > const &lhs, vector< T, Alloc > const &rhs) {
+    bool operator<=(Vector< T, Alloc > const &lhs, Vector< T, Alloc > const &rhs) {
         return (!(rhs < lhs));
     }
 
     template < typename T , typename Alloc >
-    bool operator>(vector< T, Alloc > const &lhs, vector< T, Alloc > const &rhs) {
+    bool operator>(Vector< T, Alloc > const &lhs, Vector< T, Alloc > const &rhs) {
         return (rhs < lhs);
     }
 
     template < typename T , typename Alloc >
-    bool operator>=(vector< T, Alloc > const &lhs, vector< T, Alloc > const &rhs) {
+    bool operator>=(Vector< T, Alloc > const &lhs, Vector< T, Alloc > const &rhs) {
         return (!(lhs < rhs));
     }
 
     template < typename T , typename Alloc >
-    void swap(vector< T, Alloc > &x, vector< T, Alloc > &y) {
+    void swap(Vector< T, Alloc > &x, Vector< T, Alloc > &y) {
         x.swap(y);
     }
 

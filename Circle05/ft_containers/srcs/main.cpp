@@ -1,12 +1,13 @@
-#include "vector.hpp"
+#include "../include/Vector.hpp"
+#include "Vector.hpp"
 #include <vector>
 
 
 template <typename T>
 void	printcont(ft::vector<T> const &vector)
 {
-	typename ft::vector<T>::const_iterator it = vector.begin();
-	typename ft::vector<T>::const_iterator ite = vector.end();
+	typename ft::Vector<T>::const_iterator it = vector.begin();
+	typename ft::Vector<T>::const_iterator ite = vector.end();
 	std::cout << std::endl << "next content:" << std::endl;
 	for (; it != ite; ++it)
 		std::cout << "- " << *it << std::endl;
@@ -15,10 +16,10 @@ void	printcont(ft::vector<T> const &vector)
 
 int		main(void)
 {
-	ft::vector<int> vector(7);
-	ft::vector<int> vector_two(4);
-	ft::vector<int> vector_three;
-	ft::vector<int> vector_four;
+	ft::Vector<int> vector(7);
+	ft::Vector<int> vector_two(4);
+	ft::Vector<int> vector_three;
+	ft::Vector<int> vector_four;
 
 	for (unsigned long int i = 0; i < vector.size(); ++i)
 		vector[i] = (vector.size() - i) * 3;
