@@ -52,6 +52,12 @@ int main()
     test.insert(c);
     test.insert(d);
     test.insert(e);
+    test.insert(e);
+
+    test.insert(e);
+    std::cout << test.size() << std::endl ;
+    std::cout << test.max_size() << std::endl ;
+    std::cout << test.count('a') << std::endl ;
 
     inside(test);
     return (0);

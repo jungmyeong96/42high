@@ -6,17 +6,24 @@ namespace ft
     template <class T>
     class RBTIterator
  	{
+         
 
 	public :
 
 		typedef typename	T::value_type				value_type;
+
     	typedef 			value_type*					pointer;
     	typedef 			value_type const *			const_pointer;
     	typedef 			value_type&					reference;
     	typedef 			value_type const &			const_reference;
+
+        typedef	            T*		                    node_pointer;
     	typedef 			std::ptrdiff_t				difference_type;
-	//	typedef 			Bidirectional_Iterator_tag	iterator_category;
 	
+    protected :
+		node_pointer	_ptr;
+    
+    public:
 		explicit RBTIterator(T* ptr = NULL)
 			:_ptr(ptr)
 		{}
@@ -126,12 +133,6 @@ namespace ft
 		{
 			return !(operator==(rhs));
 		}
-
-	protected :
-
-		typedef	T*		node_pointer;
-
-		node_pointer	_ptr;
 	};
 
 }
