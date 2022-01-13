@@ -1,0 +1,396 @@
+#ifndef REDBLACKTREE_HPP
+#define REDBLACKTREE_HPP
+
+#include "RBTIterator.hpp"
+#include "RedBlackTreeNode.hpp"
+
+namespace ft
+{
+    template <class T, class Compare, class Alloc>
+    class RBTree
+    {
+        public:
+            //Node 값 안에 넣는 Pair 데이터
+            typedef T                                               value_type;
+            typedef Compare                                         value_compare;
+            typedef Alloc											allocator_type;
+
+            //Node 값
+            typedef ft::RBTreeNode< T >                             node_type;
+		    typedef typename std::allocator< node_type >	        node_allocator_type; //이게 뭘까
+
+            //typedef typename Alloc::reference						reference;
+            //typedef typename Alloc::const_reference			    const_reference;
+
+            typedef typename allocator_type::pointer			    pointer;
+            typedef typename allocator_type::const_pointer		    const_pointer;
+            typedef typename node_allocator_type::pointer			node_pointer;
+            typedef typename node_allocator_type::const_pointer		node_const_pointer;
+
+            typedef RBTIterator< node_type >						iterator;
+            typedef RBTIterator<const node_type>					const_iterator;
+
+            typedef typename	value_type::first_type				key_type;
+            typedef typename	value_type::second_type				mapped_type;
+		    typedef 		    Compare								key_compare;
+
+            // typedef reverse_iterator<const_iterator>				const_reverse_iterator;
+            // typedef reverse_iterator<iterator>						reverse_iterator;
+            // typedef ptrdiff_t										difference_type;
+             typedef size_t											size_type;
+
+        private:
+            node_pointer			end_node;
+			node_pointer			root;
+
+			key_compare				comp;
+
+		    allocator_type	        value_alloc;
+			node_allocator_type		node_alloc;
+
+//***public_method***//
+
+        public:
+//constructor
+			explicit        RBTree(const key_compare& compare = key_compare(), 
+                                    const allocator_type& v_alloc = allocator_type(),
+                                    const node_allocator_type& n_alloc = node_allocator_type()); //map의 생성자와 동일한 방식으로 트리생성자 생성
+
+//iterator
+			iterator	    begin();
+			const_iterator	begin() const ;           
+            iterator	    end();
+            const_iterator	end() const;
+
+//infos
+            bool	        empty() const;
+
+
+//Modifiers:
+            bool            insert(pointer value);
+			iterator	    find(const key_type& k);
+        	const_iterator	find(const key_type& k) const;
+            node_pointer	pos_find(const key_type& k)	const;
+            
+
+//***private_method***//
+
+        private:
+            node_pointer	node_insert(pointer value);
+            node_pointer	new_leftmost(pointer value);
+            node_pointer	new_rightmost(pointer value);
+			node_pointer    node_init(pointer value, node_pointer new_parent, bool is_left = 0);
+
+			node_pointer	root_init(pointer value);
+            bool	        check_balance(node_pointer ptr);
+			bool	        ll_rotation(node_pointer ptr);
+            bool	        lr_rotation(node_pointer ptr);
+            bool	        rl_rotation(node_pointer ptr);
+            bool	        rr_rotation(node_pointer ptr);
+			void	        l_rotation(node_pointer ptr);
+            void	        r_rotation(node_pointer ptr);
+
+    };
+
+//constructor
+    template <class T, class Compare, class Alloc>
+    RBTree<T, Compare, Alloc>::RBTree(const key_compare& compare, const allocator_type& v_alloc,
+    const node_allocator_type& n_alloc) //map의 생성자와 동일한 c식으로 트리생성자 생성
+    :comp(compare), value_alloc(v_alloc), node_alloc(n_alloc) //key값을 비교하기위한 전달받은 comp와 value(pair)와 node를 할당하기 위한 할당자를 초기화
+    {
+        end_node = node_alloc.allocate(1);
+        node_alloc.construct(end_node, node_type());//노드의 디폴트는 전부다 null
+        root = end_node; //생성초기에는 root가 end_node를 가리키고있도록 만들었습니다.
+        end_node->right = end_node;
+        end_node->left = end_node;
+        end_node->parent = end_node;
+        end_node->red = false; //초기화 되지않는 end_node의 value(pair)포인터는 null
+    };
+
+//infos
+    template <class T, class Compare, class Alloc>
+    bool	RBTree<T, Compare, Alloc>::empty() const { return root == end_node; }
+
+
+//iterators:
+
+    template <class T, class Compare, class Alloc>
+    typename RBTree<T, Compare, Alloc>::iterator	
+        RBTree<T, Compare, Alloc>::begin()
+    {
+        iterator	it(end_node->left);
+
+        return it;
+    }
+
+    template <class T, class Compare, class Alloc>
+    typename RBTree<T, Compare, Alloc>::const_iterator	
+        RBTree<T, Compare, Alloc>::begin() const
+    {
+        const_iterator	it(end_node->left);
+
+        return it;
+    }
+
+    template <class T, class Compare, class Alloc>
+    typename RBTree<T, Compare, Alloc>::iterator	
+        RBTree<T, Compare, Alloc>::end()
+    {
+        iterator	it(end_node);
+
+        return it;
+    }
+
+    template <class T, class Compare, class Alloc>
+    typename RBTree<T, Compare, Alloc>::const_iterator	
+        RBTree<T, Compare, Alloc>::end() const
+    {
+        const_iterator	it(end_node);
+
+        return it;
+    }
+
+//Modifiers:
+
+    template <class T, class Compare, class Alloc>
+    bool    RBTree<T, Compare, Alloc>::insert(pointer value) //pair 
+    {
+        if (pos_find(value->first) != end_node) //만약 삽입하고자하는 값이 있는경우 false리턴
+            return false;//밖에서 따로 처리되진않음 아직까지 의문2 추론과정
+        if (empty())//최초의 노드를 삽입하는 경우 구분
+            return check_balance(root_init(value));
+        return check_balance(node_insert(value));
+    };
+
+
+//***private_method***//
+
+    template <class T, class Compare, class Alloc> 
+    typename RBTree<T, Compare, Alloc>::node_pointer	
+        RBTree<T, Compare, Alloc>::node_insert(pointer value) //pair 값
+    {
+        node_pointer	new_parent; //새로운 부모노드
+        node_pointer	ptr(root);// 루트 복사생성 
+        bool			is_left; //?
+
+        if (comp(value->first, end_node->left->key()))//삽입하고자하는 pair 키 값과 end_node의 왼쪽값 비교 // root_init한뒤 첫 node_insert면 결국 root의 키값과 비교하는 것이겠네요
+            return new_leftmost(value); //최소값?
+        if (comp(end_node->right->key(), value->first))//end_node의 우측값과 삽입하고자하는 pair 키 값 비교 
+            return new_rightmost(value); //최대값?
+        //node_insert의 if() 최대최소구문에 걸리지않음.
+        while (ptr != end_node)//root에서부터 end에 도달할 때까지 탐색
+        {            //ptr(최초 root)포인터의 키값과 삽입하고자하는 value값의 key를 비교하며 탐색 후, value가 작으면 ptr을 ptr->left로 반대의 경우에는 ptr->right로 옮김
+            new_parent = ptr; //end_node만나기 직전 부모포인터를 저장
+            is_left = comp(value->first, ptr->key());
+            ptr = is_left ? ptr->left : ptr->right;
+        }
+        return node_init(value, new_parent, is_left);
+    };
+
+    template <class T, class Compare, class Alloc> 
+    typename RBTree<T, Compare, Alloc>::node_pointer	
+        RBTree<T, Compare, Alloc>::new_leftmost(pointer value)// 새key와 end_node의 left키 ('0'<-0)  비교후 새key가 작은경우
+    {
+        RBTree<T, Compare, Alloc>::node_pointer	parent(end_node->left); // 비교했던 부모는 end_node의 좌측값
+        RBTree<T, Compare, Alloc>::node_pointer	new_node(node_alloc.allocate(1));
+
+        node_alloc.construct(new_node, node_type(value));//새 node생성
+        new_node->parent = parent;//노드입장) 새노드의 부모를 비교했던 말단의 좌측값으로 연결
+        parent->left = new_node; //endleft 즉,부모입장) 새로연결되는 노드를 자식으로 받음
+        new_node->right = end_node; //새노드의 우측
+        new_node->left = end_node; //새노드의 좌측은 end_node값을 가짐
+        end_node->left = new_node; //end_node의 좌측은 새노드의 값을 가짐?
+        return new_node; //새노드반환
+    }
+
+    template <class T, class Compare, class Alloc> 
+    typename RBTree<T, Compare, Alloc>::node_pointer	
+        RBTree<T, Compare, Alloc>::new_rightmost(pointer value)
+    {
+        node_pointer	parent(end_node->right);
+        node_pointer	new_node(node_alloc.allocate(1));
+
+        node_alloc.construct(new_node, node_type(value));
+        new_node->parent = parent;
+        parent->right = new_node;
+        new_node->right = end_node;
+        new_node->left = end_node;
+        end_node->right = new_node;
+        return new_node;
+    }
+
+    template <class T, class Compare, class Alloc> 
+    typename RBTree<T, Compare, Alloc>::node_pointer 
+        RBTree<T, Compare, Alloc>::node_init(pointer value, node_pointer new_parent, bool is_left)
+    {
+        node_pointer	new_node(node_alloc.allocate(1)); //새 삽입값 할당
+
+        node_alloc.construct(new_node, node_type(value)); //새 삽입값 노드형태 생성
+        new_node->left = end_node; //새 삽입값
+        new_node->right = end_node;
+        new_node->parent = new_parent;
+        if (is_left)
+            new_parent->left = new_node;
+        else
+            new_parent->right = new_node;
+        return new_node;
+    }
+
+    template <class T, class Compare, class Alloc> 
+    typename RBTree<T, Compare, Alloc>::node_pointer	
+        RBTree<T, Compare, Alloc>::root_init(pointer value)
+    {
+        root = node_alloc.allocate(1);
+        node_alloc.construct(root, node_type(value));//삽입하고자하는 pair형태를 노드형태로 변환해 생성
+        root->parent = end_node; //루트의 부모 자식값들을 end_node로? 의문3
+        root->right = end_node;
+        root->left = end_node;
+        end_node->left = root; //말단의 부모자식값들을 root로? 의문3
+        end_node->right = root;
+        end_node->parent = root;
+        return root; //방금 삽입한 최초의 root를 반환
+    }
+
+    template <class T, class Compare, class Alloc> 
+    bool	RBTree<T, Compare, Alloc>::check_balance(node_pointer ptr)
+    {//root값 또는 node_init의 리턴값을 전달받음
+        if (ptr == root) //파라미터가 루트인 경우 black
+            ptr->red = false; 
+        else if (ptr->parent->red) //현재 ptr이 레드
+        {
+            node_pointer	grandparent(ptr->grandparent());// 할아버지 등판
+
+            if (ptr->uncle()->red) //삼촌이 붉은색일 경우엔 재색칠과정
+            {
+                ptr->uncle()->red = false;
+                ptr->parent->red = false;
+                grandparent->red = true;
+                return	check_balance(grandparent);//할아버지기준으로 색 재검사
+            }
+            else if (grandparent->left != end_node && ptr == grandparent->left->left) //삼촌은 이미 검정인 상태
+                return ll_rotation(ptr); //내 위치가 할아버지의 좌좌손자인 동시에 //내 부모가 말단이 아닐 때 의문5 부모가 말단일 수 있나?
+            else if (grandparent->left != end_node && ptr == grandparent->left->right)
+                return lr_rotation(ptr); //내 위치가 할아버지의 좌우손자인 동시에 내 부모가 말단이 아닐 때
+            else if (grandparent->right != end_node && ptr == grandparent->right->right)
+                return rr_rotation(ptr); //내 위치가 할아버지의 우우손자인 동시에 내 부모가 말단이 아닐 때
+            else if (grandparent->right != end_node && ptr == grandparent->right->left)
+                return rl_rotation(ptr); //내 위치가 할아버지의 우좌손자인 동시에 내 부모가 말단이 아닐 때
+            std::cout << "test" << std::endl;
+        }
+        return true;//전달받은 값이 루트인경우 색깔만 블랙으로 바꿔주고 끝
+    }
+
+    template <class T, class Compare, class Alloc>
+    bool	RBTree<T, Compare, Alloc>::ll_rotation(node_pointer ptr)
+    {
+        node_pointer	grandparent(ptr->grandparent());
+        bool			tmp(grandparent->red);//아마 블랙이었겠지? 일단 저장
+
+        r_rotation(grandparent); //할아버지 기준으로 오른쪽회전 
+        grandparent->red = ptr->parent->red; //할아버지는 부모의색, 부모는 할아버지의 색을로 바꿈
+        ptr->parent->red = tmp;
+        return check_balance(ptr); //좌좌 손자기준으로 재검사
+    }
+
+    template <class T, class Compare, class Alloc>
+    bool	RBTree<T, Compare, Alloc>::lr_rotation(node_pointer ptr)
+    {
+        l_rotation(ptr->parent);
+        return ll_rotation(ptr);// 일렬로 좌측 red인상태
+    }
+
+    template <class T, class Compare, class Alloc>
+    bool	RBTree<T, Compare, Alloc>::rr_rotation(node_pointer ptr)
+    {
+        node_pointer	grandparent(ptr->grandparent());
+        bool			tmp(grandparent->red);
+
+        l_rotation(grandparent);
+        grandparent->red = ptr->parent->red; //색변경
+        ptr->parent->red = tmp;
+        return check_balance(ptr);
+    }
+
+    template <class T, class Compare, class Alloc>
+    bool	RBTree<T, Compare, Alloc>::rl_rotation(node_pointer ptr)
+    {
+        r_rotation(ptr->parent);
+        return rr_rotation(ptr);// 일렬로 우측 red인상태
+    }
+
+    template <class T, class Compare, class Alloc>
+    void	RBTree<T, Compare, Alloc>::r_rotation(node_pointer ptr)
+    {
+        node_pointer	left(ptr->left);
+
+        left->parent = ptr->parent;
+        if (ptr->parent != end_node)// ptr의 부모가 end_node인지 확인
+            ptr == ptr->parent->left ?	ptr->parent->left = left :	ptr->parent->right = left;//기존 할아버지(ptr)위치에 있던 값의 부모 입장에서 ptr이 좌측인지 우측인지 따져서 ptr을 left주소로 바꿔 이어줌
+        else
+            root = left;
+        //루트값을 재설정
+        left->right->parent = ptr; //가장 말단의 값부터 바꿔줌 ptr의 좌측자식인 left에 딸린 우측자식입장에서 보는 부모를 left에서 ptr로 재설정 (부모부터 바꾸면 값을 잃어버림)
+        ptr->left = left->right; //ptr의 왼쪽값에 즉 원래 left였던 값 대신 left의 오른쪽 자식인 left->right(최대한 ptr과 가까운 값)으로 바꿔줌
+        left->right = ptr; //ptr의 좌측자식이었던 left가 원래 부모ptr을 오른쪽 자식으로 가짐.
+        ptr->parent = left; //ptr도 left를 부모포인터로 인식시킴
+        return ;
+    }
+
+    template <class T, class Compare, class Alloc>
+    void	RBTree<T, Compare, Alloc>::l_rotation(node_pointer ptr)
+    {
+        node_pointer	right(ptr->right);//전달받은 ptr은 부모 right값은 ptr의 오른쪽자식 
+
+        right->parent = ptr->parent;
+        if (ptr->parent != end_node)//루트가 아니면 ptr 위치에 있던 값의 부모입장에서 ptr이 좌측인지 우측인지 따져서 주소바꿔 이어줌
+            ptr == ptr->parent->left ?	ptr->parent->left = right :	ptr->parent->right = right;
+        else
+            root = right;
+        right->left->parent = ptr; //가장 말단의 값 부터 바꿔줌 right에 딸린 우측 자식 입장에서 보는 부모를 right에서 ptr로 재설정
+        ptr->right = right->left; //ptr의 오른쪽 값에 즉 원래 right였던 값 대신 right의 왼쪽 자식인 (최대한 ptr과 가장 가까운값)end(*) 으로 바꿔줌
+        right->left = ptr; // ptr의 우측자식이었던 right가 원래 부모ptr을 좌측자식으로 가짐
+        ptr->parent = right;//ptr도 left를 부모포인터로 인식시킴
+        return ;
+    }
+
+    template <class T, class Compare, class Alloc>
+    typename RBTree<T, Compare, Alloc>::iterator	
+        RBTree<T, Compare, Alloc>::find(const key_type& k)
+    {
+        iterator	pos(pos_find(k));
+
+        return pos;
+    }
+
+    template <class T, class Compare, class Alloc>
+    typename RBTree<T, Compare, Alloc>::const_iterator	
+        RBTree<T, Compare, Alloc>::find(const key_type& k) const
+    {
+        const_iterator	pos(pos_find(k));
+
+        return pos;
+    }
+
+    template <class T, class Compare, class Alloc>
+    typename RBTree<T, Compare, Alloc>::node_pointer	
+        RBTree<T, Compare, Alloc>::pos_find(const key_type& k)	const
+    {
+        node_pointer	ptr(root);//루트노드 생성
+        bool			is_left;
+
+        while (ptr != end_node)//노드의 처음부터 끝까지 탐색
+        {
+            if ((is_left = comp(k, ptr->key())) == comp(ptr->key(), k)) //같은 것을 찾은상황
+                return ptr;
+            if (is_left)
+                ptr = ptr->left;//찾고자하는 k가 더 작으면 왼쪽으로
+            else
+                ptr = ptr->right;//찾고자하는 k가 더 크면 오른쪽으로
+        }
+        return ptr;//끝까지 못 찾을 경우 end_node로 리턴
+    };
+
+
+} // namespace ft
+
+#endif
