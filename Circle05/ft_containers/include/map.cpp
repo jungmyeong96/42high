@@ -1,17 +1,6 @@
 #include "Map.hpp"
 #include <utility>
 
-template < class FT, class STD >
-void	output(const FT & ft_c, const STD & std_c)
-{
-	std::cout << "____________________________________________" << std::endl << std::endl
-	/*	<< "ft	:	" << ft_c.size() << "	/	" << ft_c.capacity() << std::endl
-		<< "std	:	" << std_c.size() << "	/	" << std_c.capacity() << std::endl*/
-		<< "ft	:	" << ft_c.size() << "	/	" << std::endl
-		<< "std	:	" << std_c.size() << "	/	" << std::endl
-		<< "____________________________________________" << std::endl << std::endl;
-}
-
 template < class C >
 void	inside(const C& c)
 {
