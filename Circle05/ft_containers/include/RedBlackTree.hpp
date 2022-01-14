@@ -72,9 +72,14 @@ namespace ft
             size_type       max_size() const;
             size_type	    count(const key_type& k) const;
 
+//ElementAccess
+            mapped_type&    operator[](const key_type& k);
+
 
 //Modifiers:
             bool            insert(pointer value);
+            void	        erase(iterator to_remove);
+            void	        clear();
             
 
 //***private_method***//
@@ -94,6 +99,13 @@ namespace ft
 			void	        l_rotation(node_pointer ptr);
             void	        r_rotation(node_pointer ptr);
 
+            void	        root_erase();
+			void	        node_erase(node_pointer ptr);
+            void	        node_clear(node_pointer ptr);
+            void            node_destroy(node_pointer ptr);
+            void            relink(node_pointer ptr);
+    		node_pointer	unlink(node_pointer ptr, bool is_left);
+
     };
 
 //constructor
@@ -104,7 +116,7 @@ namespace ft
     {
         end_node = node_alloc.allocate(1);
         node_alloc.construct(end_node, node_type());//노드의 디폴트는 전부다 null
-        root = end_node; //생성초기에는 root가 end_node를 가리키고있도록 만들었습니다.
+        root = end_node; //생성초기에는 root가 end_node를 가리키고있도록 만들었습니다. operate =
         end_node->right = end_node;
         end_node->left = end_node;
         end_node->parent = end_node;
@@ -151,6 +163,22 @@ namespace ft
             return 1;
         return 0;
     }
+
+//ElementAccess
+    template <class T, class Compare, class Alloc>
+    typename RBTree<T, Compare, Alloc>::mapped_type&            //k 가 컨테이너에 있는 요소의 키와 일치 하면 함수는 매핑된 값에 대한 참조를 반환합니다. 
+        RBTree<T, Compare, Alloc>::operator[](const key_type& k)// k 가 컨테이너에 있는 요소의 키와 일치하지 않으면 함수는 해당 키가 있는 새 요소를 삽입하고 매핑된 값에 대한 참조를 반환합니다
+    {
+        node_pointer    ptr(pos_find(k)); 
+        value_type*     new_value(NULL); //empty parentheses interpreted as a function declaration [-Wvexing-parse] 에러
+
+        if (ptr != end_node)
+            return ptr->value->second;
+        new_value = value_alloc.allocate(1); //sizeof(value_type) 
+        value_alloc.construct(new_value, make_pair(k, mapped_type()));
+        insert(new_value);
+        return (new_value->second);
+    }    
 
 //iterators:
 
@@ -239,6 +267,31 @@ namespace ft
         return check_balance(node_insert(value));
     };
 
+    template <class T, class Compare, class Alloc>
+    void	RBTree<T, Compare, Alloc>::erase(iterator to_remove) //이중블랙이 하나도 구현되지않음 구조를 다시짜야할듯
+    {
+        node_pointer	ptr(to_remove.get_node());
+
+        if (ptr == root)
+            return root_erase();
+        return node_erase(ptr);
+    }  
+
+    template <class T, class Compare, class Alloc>
+    void	RBTree<T, Compare, Alloc>::clear()
+    {
+        if (empty()) //root 와 end_node가 같은경우
+            return ;
+        if (root->left != end_node)
+            node_clear(root->left);
+        if (root->right != end_node)
+            node_clear(root->right);
+        node_destroy(root);
+        root = end_node;//초기 생성자의 상태와 동일시 시켜줌.
+        end_node->right = end_node;
+        end_node->left = end_node;
+        end_node->parent = end_node;
+    }
 
 //***private_method***//
 
@@ -450,6 +503,121 @@ namespace ft
         return ;
     }
 
+    template <class T, class Compare, class Alloc>
+    void    RBTree<T, Compare, Alloc>::root_erase() //root기준 삭제알고리즘 적용
+    {
+        node_pointer	new_root;
+        node_pointer	orphan;
+         //루트에 자식이 한쪽 노드만 달려있는경우 // 초기는 end의 자식과 부모가 root를 가리킴
+        if (root == end_node->left) //root의 값이 최소값이면, root의 right를 최소로 변경
+            end_node->left = root->right;
+        if (root == end_node->right) //root의 값이 최대값이면, root의 left를 최대로 변경
+            end_node->right = root->left; 
+        if (root->right == end_node && root->left == end_node) //루트에 자식이없는 경우 즉, 루트만 있는 경우 해당
+            return clear();
+        //루트의 두 자식중에서 딸린 자식이 더 많은 쪽이 새로운 후계자가 되도록설정
+        if (root->right == end_node || check_size(root->right) < check_size(root->left))
+        {
+            new_root = root->left;
+            orphan = root->right;
+        }
+        else
+        {
+            new_root = root->right;
+            orphan = root->left;
+        }
+        node_destroy(root); //뭔가 이상함
+        root = new_root;
+        root->parent = end_node;
+        end_node->parent = root; //end가 저장하는 정보 변경
+        relink(orphan);
+    }
+
+    template <class T, class Compare, class Alloc>
+    void    RBTree<T, Compare, Alloc>::node_erase(node_pointer ptr)
+    {
+        node_pointer	parent(ptr->parent);
+        node_pointer	orphan(end_node);
+
+        if (ptr == end_node->left) //최대 최소값 수정
+            end_node->left = parent;
+        if (ptr == end_node->right)
+            end_node->right = parent;
+        if (ptr->left == end_node && ptr->right == end_node)
+        {
+            if (ptr == parent->left)
+                parent->left = end_node;
+            else
+                parent->right = end_node;
+        }
+        else
+            orphan = unlink(ptr, (ptr->right == end_node || check_size(ptr->right) < check_size(ptr->left)));
+		node_destroy(ptr);
+		relink(orphan);
+    }
+
+    template <class T, class Compare, class Alloc>
+    void    RBTree<T, Compare, Alloc>::node_clear(node_pointer ptr)
+    {
+        if (ptr->left != end_node)
+            node_clear(ptr->left);
+        if (ptr->right != end_node)
+            node_clear(ptr->right);
+        node_destroy(ptr);
+    }
+
+    template <class T, class Compare, class Alloc>
+    void    RBTree<T, Compare, Alloc>::node_destroy(node_pointer ptr)
+    {
+        value_alloc.destroy(ptr->value);
+        value_alloc.deallocate(ptr->value, 1);
+        node_alloc.destroy(ptr);
+        node_alloc.deallocate(ptr, 1);
+    }
+
+    template <class T, class Compare, class Alloc>
+    void    RBTree<T, Compare, Alloc>::relink(node_pointer orphan)
+    {
+        if (!empty() && orphan != end_node)
+        {
+            node_pointer	parent;
+            node_pointer	ptr(root);
+            bool			is_left;
+            //기존 부모와 연결하려면 정보가 있어야하는데 고아정보밖에없음.
+            while (ptr != end_node) //새로 배정받은 루트에서부터 단절된 고아노드가 들어갈 최적의 위치 파악
+            {
+                parent = ptr;
+                is_left = comp(orphan->key(), ptr->key());
+                if (is_left)
+                    ptr = ptr->left;
+                else
+                    ptr = ptr->right;
+            }
+            orphan->parent = parent;
+            if (is_left)
+                parent->left = orphan;
+            else
+                parent->right = orphan;
+        }
+        return ;
+    }
+
+    template <class T, class Compare, class Alloc>
+    typename RBTree<T, Compare, Alloc>::node_pointer
+        RBTree<T, Compare, Alloc>::unlink(node_pointer ptr, bool is_left)
+    {
+        node_pointer	tmp;
+        if (is_left)
+            tmp = ptr->left;
+        else
+            tmp = ptr->right;
+        ptr == ptr->parent->left ?
+            ptr->parent->left = tmp : ptr->parent->right = tmp;
+        tmp->parent = ptr->parent;
+        if (is_left)
+            return ptr->right;
+        return ptr->left;
+    }
 
 } // namespace ft
 

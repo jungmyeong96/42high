@@ -133,6 +133,8 @@ namespace ft
 		{
 			return !(operator==(rhs));
 		}
+        
+        node_pointer    get_node() { return _ptr; }
 	};
 
 }

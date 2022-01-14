@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "Pair.hpp"
+#include "MapIterator.hpp"
 #include "RedBlackTree.hpp"
 #include "RBTIterator.hpp"
 #include "SpacializedTp.hpp"
@@ -71,12 +72,18 @@ namespace ft
             size_type       max_size() const ;        
 
             // Element access //
+            mapped_type&	operator[](const key_type& k);
+
 
             // Modifiers //
             ft::pair<iterator, bool>        insert(const value_type &val);
             iterator                        insert (iterator position, const value_type& val);
             template <class InputIterator>
             void                            insert (InputIterator first, InputIterator last);
+            void                        	erase(iterator position);
+		    void	                        erase(iterator first, iterator last);
+		    size_type	                    erase(const key_type& k);
+            void                        	clear();
 
 
             // Observers //
@@ -142,7 +149,9 @@ namespace ft
 
 
     // Element access //
-
+    template<class Key, class T, class Compare, class Alloc>
+    typename Map<Key, T, Compare, Alloc>::mapped_type&
+    	Map<Key, T, Compare, Alloc>::operator[](const key_type& k) { return tree[k]; }
 
 
 
@@ -193,6 +202,35 @@ namespace ft
         return ;
     }
 
+    template < class Key, class T, class Compare, class Alloc>
+    void	Map<Key, T, Compare, Alloc>::erase(iterator position)
+    {
+        tree.erase(position);
+    }
+
+    template < class Key, class T, class Compare, class Alloc>
+    void	Map<Key, T, Compare, Alloc>::erase(iterator first, iterator last)
+    {
+        while (first != last)
+            tree.erase(first++);
+    }
+
+    template < class Key, class T, class Compare, class Alloc>
+    typename Map<Key, T, Compare, Alloc>::size_type
+        Map<Key, T, Compare, Alloc>::erase(const key_type& k)
+    {
+        iterator	pos(find(k));
+
+        if (pos == end())
+            return 0;
+        tree.erase(pos);
+        return 1;
+    }
+    template < class Key, class T, class Compare, class Alloc>
+    void	Map<Key, T, Compare, Alloc>::clear()
+    {
+        tree.clear();
+    }
 
 
     //Operation

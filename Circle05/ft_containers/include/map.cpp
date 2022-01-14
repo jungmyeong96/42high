@@ -47,7 +47,7 @@ int main()
     d.second = 40;
     e.first = 'e';
     e.second = 40;
-    test.insert(a);
+    test['a'];
     test.insert(b);
     test.insert(c);
     test.insert(d);
@@ -55,6 +55,9 @@ int main()
     test.insert(e);
 
     test.insert(e);
+    test.erase(b.first);
+    test['b'];
+    test['f'];
     std::cout << test.size() << std::endl ;
     std::cout << test.max_size() << std::endl ;
     std::cout << test.count('a') << std::endl ;
