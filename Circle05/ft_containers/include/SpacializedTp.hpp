@@ -3,6 +3,14 @@
 
 namespace ft
 {
+
+	enum Color
+	{
+		RED,
+		BLACK,
+		DBLACK
+	};
+
     template<bool B, class T = void>
     struct enable_if {};
     
@@ -80,18 +88,6 @@ namespace ft
         }
         return (first1 == last1) && (first2 != last2);
     }
-
-    // template<class InputIterator, class size_type, class ForwardIterator>
-    // void uninitialized_copy ( InputIterator first, size_type size,
-    //                                     ForwardIterator result )
-    // {
-    //     size_type i;
-
-    //     i = -1;
-    //     while (++i < size)
-    //         first[i] = result[i];
-    // }
-
 
     template <bool isConst, typename isFalse, typename isTrue>
     struct ChooseConst {};

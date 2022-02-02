@@ -1,12 +1,12 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include "Vector.hpp"
+#include "vector.hpp"
 
 namespace ft
 {
-    template < typename T , typename Container = ft::Vector<T> >
-    class Stack
+    template < typename T , typename Container = ft::vector<T> >
+    class stack
     {
         public:
             typedef T value_type;
@@ -21,11 +21,11 @@ namespace ft
 
         public:
             //Canonical form
-            explicit Stack (const container_type& ctnr = container_type()) : ctnr(ctnr) {};
+            explicit stack (const container_type& ctnr = container_type()) : ctnr(ctnr) {};
             //컨테이너 어댑터는 내부적으로 컨테이너 개체를 데이터로 유지합니다. 이 컨테이너 개체는 생성자에 전달 된 ctnr 인수 의 복사본입니다(있는 경우). 그렇지 않으면 빈 컨테이너입니다.
-            Stack(const Stack& other) : ctnr(other.ctnr) {};
-            Stack& operator=(const Stack& other) { ctnr = other.ctnr; return (*this); };
-            ~Stack() {};
+            stack(const stack& other) : ctnr(other.ctnr) {};
+            stack& operator=(const stack& other) { ctnr = other.ctnr; return (*this); };
+            ~stack() {};
 
             //Member function
             bool empty() const                  { return (ctnr.empty()); };
@@ -35,12 +35,12 @@ namespace ft
             void push(const value_type& val)    { ctnr.push_back(val); };
             void pop()                          { ctnr.pop_back(); };
 
-            friend bool operator==(const Stack& lhs, const Stack& rhs)  { return lhs.ctnr == rhs.ctnr; };
-            friend bool operator!=(const Stack& lhs, const Stack& rhs)  { return lhs.ctnr != rhs.ctnr; };
-            friend bool operator<(const Stack& lhs, const Stack& rhs)   { return lhs.ctnr < rhs.ctnr; };
-            friend bool operator<=(const Stack& lhs, const Stack& rhs)  { return lhs.ctnr <= rhs.ctnr; };
-            friend bool operator>(const Stack& lhs, const Stack& rhs)   { return lhs.ctnr > rhs.ctnr; };
-            friend bool operator>=(const Stack& lhs, const Stack& rhs)  { return lhs.ctnr >= rhs.ctnr; };
+            friend bool operator==(const stack& lhs, const stack& rhs)  { return lhs.ctnr == rhs.ctnr; };
+            friend bool operator!=(const stack& lhs, const stack& rhs)  { return lhs.ctnr != rhs.ctnr; };
+            friend bool operator<(const stack& lhs, const stack& rhs)   { return lhs.ctnr < rhs.ctnr; };
+            friend bool operator<=(const stack& lhs, const stack& rhs)  { return lhs.ctnr <= rhs.ctnr; };
+            friend bool operator>(const stack& lhs, const stack& rhs)   { return lhs.ctnr > rhs.ctnr; };
+            friend bool operator>=(const stack& lhs, const stack& rhs)  { return lhs.ctnr >= rhs.ctnr; };
     };
 }
 

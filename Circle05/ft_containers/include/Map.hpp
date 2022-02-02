@@ -1,249 +1,166 @@
 #ifndef MAP_HPP
-#define MAP_HPP
+# define MAP_HPP
 
-#include <iostream>
-#include "Pair.hpp"
-#include "MapIterator.hpp"
-#include "RedBlackTree.hpp"
-#include "RBTIterator.hpp"
-#include "SpacializedTp.hpp"
-#include <utility> //pair구현해야함
-#include <functional> //less 구현해야함
-#include <map>
+# include "RBTree.hpp"
+# include <iostream>
+# include <memory>
+# include <functional>
 
 namespace ft
 {
+	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator< ft::pair< const Key, T> > >
+	class map
+	{
+		public:
+			typedef Key											key_type;
+			typedef T											mapped_type;
+			typedef ft::pair<const key_type, mapped_type>		value_type;
+			typedef Compare										key_compare;
+			typedef Alloc										allocator_type;
+			typedef typename allocator_type::reference			reference;
+			typedef typename allocator_type::const_reference	const_reference;
+			typedef typename allocator_type::pointer			poiner;
+			typedef typename allocator_type::const_pointer		const_pointer;
+			typedef ft::tree_iterator<value_type>				iterator;
+			typedef ft::const_tree_iterator<value_type>			const_iterator; //const_tree_iterator와 tree_iterator<const> 차이????
+			typedef ft::reverse_iterator<iterator>				reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+			typedef std::ptrdiff_t								difference_type;   //typename 안해도되나??????????
+			typedef std::size_t									size_type;
+			class value_compare : public std::binary_function<value_type, value_type, bool>
+			{
+				friend class map;
+				protected:
+					Compare	comp;
+					value_compare (Compare c) : comp(c) {}
+				public:
+					typedef bool		result_type;
+					typedef value_type	first_argument_type;
+					typedef value_type	second_argument_type;
+					bool operator() (const value_type& x, const value_type& y) const
+					{
+						return comp(x.first, y.first);
+					}
+			};
 
-    //std::map<int, int> a; 
-    template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > > //구현해야함
-    class Map //compare와 alloc은 템플릿 초기화에 의해 따로 값을 넣지않아도 됨. main에서는 템플릿에 자료형만 두개 넣어서 생성시킬예정.
-    {
-        
-        // Member type//
-        public:
-            typedef Key                                                         key_type;
-            typedef T                                                           mapped_type;
+		private:
+			typedef RBTree<value_type, value_compare, allocator_type> tree_type;
 
-            typedef ft::pair<const key_type, mapped_type>                       value_type;//pair는 이제부터 value로 취급            
-            typedef Compare                                                     key_compare;
-            typedef Alloc                                                       allocator_type;
-            typedef RBTree<value_type, key_compare, allocator_type>             rbtree; //트리 자료형
-            typedef ptrdiff_t                                                   difference_type;
-            typedef size_t                                                      size_type;
+			tree_type           _tree;
 
-            typedef typename allocator_type::reference                          reference;
-            typedef typename allocator_type::const_reference                    const_reference;
-            typedef typename allocator_type::pointer                            pointer;
-            typedef typename allocator_type::const_pointer                      const_pointer;
+		public:
+			explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+					: _tree(value_compare(comp), alloc) {};
 
-            typedef typename RBTree<value_type, key_compare, Alloc>::iterator         iterator;
-            typedef typename RBTree<value_type, key_compare, Alloc>::const_iterator   const_iterator;
-       //     typedef typename ft::reverse_iterator<T, false>                     reverse_iterator;
-        //    typedef typename ft::reverse_iterator<T, true>                      const_reverse_iterator;
-        
+			template <class InputIterator>
+			map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(),
+					const allocator_type& alloc = allocator_type())
+				: _tree(value_compare(comp), alloc)
+			{
+				this->insert(first, last);
+			}
 
-        //----------private Member---------//
+			map (const map& other) : _tree(other._tree)
+			{}
 
-        private:
-            rbtree          tree;
-            key_compare     comp;
-            allocator_type  alloc;
+			~map () {}
 
+			map& operator= (const map& other)
+			{
+				if (this == &other)
+					return (*this);
+				this->_tree = other._tree;
+				return (*this);
+			}
 
-        //--------Member Function---------//
+			iterator 				begin() { return (_tree.begin()); }
+			const_iterator 			begin() const { return (_tree.begin()); }
+			iterator 				end() {  return (_tree.end()); }
+			const_iterator	 		end() const {  return (_tree.end()); }
+			reverse_iterator		rbegin() { return (_tree.rbegin()); }
+			const_reverse_iterator 	rbegin() const { return (_tree.rbegin()); }
+			reverse_iterator 		rend() {  return (_tree.rend()); }
+			const_reverse_iterator 	rend() const {  return (_tree.rend()); }
 
-        public:
-            // Canonical form //
-            explicit Map (const key_compare& comp = key_compare(),
-                const allocator_type& alloc = allocator_type());
-		    template< class InputIterator >
-		    Map(InputIterator first, InputIterator last,
-			    const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(),
-				typename enable_if<!is_integral<InputIterator>::value, InputIterator >::type* = NULL);
-            // Iterators //
-            iterator	    begin() ;
-            const_iterator	begin() const ;
-            iterator	    end() ;
-            const_iterator	end() const ;
+			bool 					empty() const { return (this->_tree.empty()); }
+			size_type 				size() const { return (this->_tree.size()); }
+			size_type 				max_size() const { return (_tree.max_size()); }
 
-            // Capacity //
-            bool	        empty() const ;
-            size_type       size() const ;
-            size_type       max_size() const ;        
+			mapped_type& operator[] (const key_type& key)
+			{
+				return (insert(ft::make_pair(key, mapped_type())).first->second);
+			}
 
-            // Element access //
-            mapped_type&	operator[](const key_type& k);
+			pair<iterator,bool> 	insert (const value_type& val) { return (_tree.insert(val)); }
+			iterator 				insert (iterator position, const value_type& val) { return (_tree.insert(position, val)); }
+			template <class InputIterator>
+			void 					insert (InputIterator first, InputIterator last) {	return (_tree.insert(first, last));	}
+			void 					erase (iterator position) { return (_tree.erase(position)); }
+			size_type 				erase (const key_type& key)	{ return (_tree.erase(ft::make_pair(key, mapped_type()))); }
+			void 					erase (iterator first, iterator last)	{ return (_tree.erase(first, last)); }
 
+			void            		swap (map& x) { return (_tree.swap(x._tree)); }
+			void           			clear() { return (_tree.clear()); }
 
-            // Modifiers //
-            ft::pair<iterator, bool>        insert(const value_type &val);
-            iterator                        insert (iterator position, const value_type& val);
-            template <class InputIterator>
-            void                            insert (InputIterator first, InputIterator last);
-            void                        	erase(iterator position);
-		    void	                        erase(iterator first, iterator last);
-		    size_type	                    erase(const key_type& k);
-            void                        	clear();
+			key_compare				key_comp() const { return (key_compare()); }
+			value_compare			value_comp() const { return (value_compare(key_compare())); }
 
+			iterator				find (const key_type& key) { return (iterator(_tree.find(ft::make_pair(key, mapped_type())))); }
+			const_iterator			find (const key_type& key) const { return (const_iterator(_tree.find(ft::make_pair(key, mapped_type())))); }
+			size_type				count (const key_type& key) const { return (_tree.count(ft::make_pair(key, mapped_type()))); }
 
-            // Observers //
+			iterator        		lower_bound (const key_type& key) {	return (iterator(_tree.lower_bound(ft::make_pair(key, mapped_type())))); }
+			iterator        		upper_bound (const key_type& key) {	return (iterator(_tree.upper_bound(ft::make_pair(key, mapped_type())))); }
+			const_iterator			lower_bound (const key_type& key) const {	return (const_iterator(_tree.lower_bound(ft::make_pair(key, mapped_type())))); }
+			const_iterator			upper_bound (const key_type& key) const {	return (const_iterator(_tree.upper_bound(ft::make_pair(key, mapped_type())))); }
 
-            // Operations //
-            iterator	find(const key_type& k);
-            size_type	count(const key_type& k) const ; 
+			pair<const_iterator, const_iterator> equal_range (const key_type& key) const
+			{ return (ft::make_pair(this->lower_bound(key), this->upper_bound(key))); }
 
-            // Allocator //
+			pair<iterator, iterator> equal_range (const key_type& key)
+			{ return (ft::make_pair(this->lower_bound(key), this->upper_bound(key))); }
 
-    };
-    
-    // Canonical form //
-    template < class Key, class T, class Compare, class Alloc>
-    Map<Key, T, Compare, Alloc>::Map(const key_compare& comp,
-        const allocator_type& alloc) : tree(comp, alloc), comp(comp), alloc(alloc) {} //트리에 컴페어와, 할당타입값 전달
+			allocator_type get_allocator() const
+			{ return (allocator_type()); }
 
-    template < class Key, class T, class Compare, class Alloc>
-    template< class InputIterator >
-    Map< Key, T, Compare, Alloc >::Map(InputIterator first, InputIterator last, const key_compare& comp, const allocator_type& alloc,
-            typename enable_if<!is_integral<InputIterator>::value, InputIterator >::type*)
-         : tree(comp, alloc), comp(comp), alloc(alloc)
-    {
-        insert(first, last);
-    }
+			friend bool operator==( const ft::map<Key,T,Compare,Alloc>& lhs,
+				const ft::map<Key,T,Compare,Alloc>& rhs )
+			{
+				if (lhs.size() != rhs.size())
+					return (false);
+				return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+			}
 
-    // Iterators //
-    template<class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::iterator
-    	Map<Key, T, Compare, Alloc>::begin() { return tree.begin(); } //node_pointer를 이터레이터 객체화 시킨 뒤, 반환
+			friend bool operator!=( const ft::map<Key,T,Compare,Alloc>& lhs,
+				const ft::map<Key,T,Compare,Alloc>& rhs )
+			{
+				return (!(lhs == rhs));
+			}
 
-    template<class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::const_iterator	
-        Map<Key, T, Compare, Alloc>::begin() const { return tree.begin(); }
+			friend bool operator<( const ft::map<Key,T,Compare,Alloc>& lhs,
+							const ft::map<Key,T,Compare,Alloc>& rhs )
+			{
+				return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+			}
 
-    template<class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::iterator	
-        Map<Key, T, Compare, Alloc>::end() { return tree.end(); }
+			friend bool operator<=( const ft::map<Key,T,Compare,Alloc>& lhs,
+							const ft::map<Key,T,Compare,Alloc>& rhs )
+			{
+				return(!(rhs < lhs));
+			}
 
-    template<class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::const_iterator	
-        Map<Key, T, Compare, Alloc>::end() const { return tree.end(); }
+			friend bool operator>( const ft::map<Key,T,Compare,Alloc>& lhs,
+							const ft::map<Key,T,Compare,Alloc>& rhs )
+			{
+				return (rhs < lhs);
+			}
 
-
-    // Capacity //
-    template<class Key, class T, class Compare, class Alloc>
-    bool    Map<Key, T, Compare, Alloc>::empty() const
-    {
-        return tree.empty();
-    }
-    template<class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::size_type 
-         Map<Key, T, Compare, Alloc>::size() const
-    {
-        return tree.size();
-    }
-    template<class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::size_type
-         Map<Key, T, Compare, Alloc>::max_size() const
-    {
-        return tree.max_size();
-    }
-
-
-    // Element access //
-    template<class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::mapped_type&
-    	Map<Key, T, Compare, Alloc>::operator[](const key_type& k) { return tree[k]; }
-
-
-
-    // Modifiers //
-    template<class Key, class T, class Compare, class Alloc>
-    ft::pair<typename Map<Key, T, Compare, Alloc>::iterator, bool> 
-        Map<Key, T, Compare, Alloc>::insert(const value_type &val)
-    {
-        iterator   first(find(val.first)); //삽입하고자하는 키의 값을 찾은 뒤, 복사생성
-        bool                                    second(false);
-        pointer                                 new_val(NULL);
-
-        if (first == tree.end()) //삽입하고자하는 값이 없는경우만 들어옴
-        {
-            new_val = alloc.allocate(1); //1만큼 메모리에 할당
-            alloc.construct(new_val, val); //할당 후, new_val의 위치에 val의 객체(pair)를 생성 //construct구조 의문1
-            second = tree.insert(new_val);//new_val에 있는 객체(pair)를 tree에 삽입 //근데 false값을 받는 부분이없네 
-            //tree.insert(new_val);//new_val에 있는 객체(pair)를 tree에 삽입 //근데 false값을 받는 부분이없네
-            first = find(val.first); //삽입한 뒤, 삽입된 위치 포인터 반환
-            //second = true; //insert의 값을 받아줘도 괜찮을 것같다는 생각이 들음 insert의 값 true false가 놀음.
-        }
-        return (ft::make_pair(first, second));//멤버 pair::first 반복되는 요소 또는 맵에서 동등한 키를 가진 요소를 가리키도록 설정됩니다.
-    }// pair의 pair::second 요소는 새 요소를 삽입한 경우 true로 설정되고 동등한 키가 이미 있는 경우 false로 설정됩니다.
-
-    template < class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::iterator 
-        Map<Key, T, Compare, Alloc>::insert (iterator position, const value_type& val)
-    {
-        iterator	it(tree.find(val.first));
-        pointer		new_val(NULL);
-
-        if (it == tree.end())
-        {
-            it = iterator(insert(val));
-        }
-        return it;//아직 미구현
-    }
-
-    template < class Key, class T, class Compare, class Alloc>
-    template< class InputIterator >
-	void Map<Key, T, Compare, Alloc>::insert (InputIterator first, InputIterator last)
-    {
-        while (first != last)
-        {
-            insert(*first);
-            ++first;
-        }
-        return ;
-    }
-
-    template < class Key, class T, class Compare, class Alloc>
-    void	Map<Key, T, Compare, Alloc>::erase(iterator position)
-    {
-        tree.erase(position);
-    }
-
-    template < class Key, class T, class Compare, class Alloc>
-    void	Map<Key, T, Compare, Alloc>::erase(iterator first, iterator last)
-    {
-        while (first != last)
-            tree.erase(first++);
-    }
-
-    template < class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::size_type
-        Map<Key, T, Compare, Alloc>::erase(const key_type& k)
-    {
-        iterator	pos(find(k));
-
-        if (pos == end())
-            return 0;
-        tree.erase(pos);
-        return 1;
-    }
-    template < class Key, class T, class Compare, class Alloc>
-    void	Map<Key, T, Compare, Alloc>::clear()
-    {
-        tree.clear();
-    }
-
-
-    //Operation
-    template<class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::iterator 
-        Map<Key, T, Compare, Alloc>::find(const key_type& k) { return (tree.find(k)); } //tree에서 k에 해당하는 노드포인터를 찾아 이터레이터객체화 시킨 뒤, 반환
-    
-    template<class Key, class T, class Compare, class Alloc>
-    typename Map<Key, T, Compare, Alloc>::size_type
-        Map<Key, T, Compare, Alloc>::count(const key_type& k) const
-    {
-        return tree.count(k);
-    }
+			friend bool operator>=( const ft::map<Key,T,Compare,Alloc>& lhs,
+							const ft::map<Key,T,Compare,Alloc>& rhs )
+			{
+				return (!(lhs < rhs));
+			}
+	};
 
 }
 
