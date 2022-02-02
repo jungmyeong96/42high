@@ -53,6 +53,8 @@ namespace ft
 				copyTree(ref.getRoot());
 			}
 
+			~RBTree() { clear(); }
+
 			RBTree& operator=(const RBTree &ref)
 			{
 				if (this == &ref)
