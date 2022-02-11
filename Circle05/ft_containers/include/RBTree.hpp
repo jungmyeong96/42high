@@ -298,7 +298,7 @@ namespace ft
 					setRoot(node);
 					return (ft::make_pair(iterator(node), true));
 				}
-				while (tmp)
+				while (tmp) //같은게 있는 경우
 				{
 					if (_comp(tmp->value, node->value))
 					{
@@ -466,7 +466,7 @@ namespace ft
 					grandparent = getGrandparent(node);
 					uncle = getUncle(node);
 
-					if(getColor(uncle) == RED)
+					if(getColor(uncle) == RED) //삼촌이 레드일경우 쉬움
 					{ // recoloring
 						insertCase1(node);
 					}

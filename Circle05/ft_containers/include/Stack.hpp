@@ -22,7 +22,6 @@ namespace ft
         public:
             //Canonical form
             explicit stack (const container_type& ctnr = container_type()) : ctnr(ctnr) {};
-            //컨테이너 어댑터는 내부적으로 컨테이너 개체를 데이터로 유지합니다. 이 컨테이너 개체는 생성자에 전달 된 ctnr 인수 의 복사본입니다(있는 경우). 그렇지 않으면 빈 컨테이너입니다.
             stack(const stack& other) : ctnr(other.ctnr) {};
             stack& operator=(const stack& other) { ctnr = other.ctnr; return (*this); };
             ~stack() {};

@@ -14,7 +14,7 @@ namespace ft
     class vector
     {
         public:
-            typedef T value_type; //타입지정
+            typedef T value_type;
             typedef T& reference;
             typedef const T& const_reference;
             typedef T* pointer;
@@ -45,7 +45,7 @@ namespace ft
             vector& operator= ( const vector& );
 
             //Normal Iterators
-            iterator begin() { return (iterator(this->ft_start));};   ///< 시작부분 포인터
+            iterator begin() { return (iterator(this->ft_start));};
             const_iterator begin() const { return const_iterator(this->ft_start);};
             iterator end() { return (iterator(this->ft_start + this->ft_size)); };
             const_iterator end() const { return const_iterator(this->ft_start + this->ft_size); };
@@ -110,7 +110,7 @@ namespace ft
         this->ft_start = alloc.allocate(n);
         this->ft_size = n;
         std::uninitialized_fill(this->ft_start, this->ft_start + this->ft_size, val);
-        this->ft_capacity = n; // +4를 해야하는지?
+        this->ft_capacity = n;
     }
 
     template < typename T , typename Alloc >
@@ -173,7 +173,7 @@ namespace ft
         if (this->ft_capacity < size)
         {
             size_type idx = this->ft_size;
-            pointer tmp = alloc.allocate(size); //size가 과도하게들어오면?
+            pointer tmp = alloc.allocate(size);
             for (size_type i = 0; i < this->ft_size; i++)
 				tmp[i] = this->ft_start[i];
             while (this->ft_start + idx != this->ft_start)
@@ -272,10 +272,10 @@ namespace ft
         size_type idx;
         
         idx = 0;
-        while (this->begin() + idx != pos) //오버플로우로 터지면 어떡하지
+        while (this->begin() + idx != pos)
             ++idx;
         insert(pos, 1, val);
-        return (this->begin() + idx); //새롭게 삽입된 요소 중 첫번째 요소 이터레이터
+        return (this->begin() + idx);
     }
 
     template < typename T , typename Alloc >
@@ -340,7 +340,7 @@ namespace ft
     }
 
     template < typename T , typename Alloc >
-    void vector< T, Alloc >::clear() //재할당이 보장 되지 않으며 이 함수를 호출 하여 벡터 용량 이 변경된다는 보장도 없습니다. 재할당을 강제하는 일반적인 대안은 swap 을 사용하는 것입니다 . ?? swap은 재할당보장?
+    void vector< T, Alloc >::clear()
     {
         erase(this->begin(), this->end());
     }
@@ -350,7 +350,7 @@ namespace ft
     bool operator==(vector< T, Alloc > const &lhs, vector< T, Alloc > const &rhs) {
         if (lhs.size() != rhs.size())
             return (false);
-        return(ft::equal(lhs.begin(), lhs.end(), rhs.begin())); //재구현해야함
+        return(ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
     }
 
     template < typename T , typename Alloc >

@@ -24,6 +24,8 @@ int main()
               << "[elapsed time: " << elapsed_seconds.count() << "s]\n";
         std::cout << std::endl;
         std::cout << std::endl;
+        while (1)
+            ;
 
     }
 

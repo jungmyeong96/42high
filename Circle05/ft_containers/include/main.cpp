@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
+#include <list>
 #if 1 //CREATE A REAL STL EXAMPLE
 	#include <map>
 	#include <stack>
@@ -60,6 +61,8 @@ int main(int argc, char** argv) {
 	ft::stack<int> stack_int;
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+	ft::stack<Buffer, std::list<Buffer> > stack_list_buffer;
+	ft::stack<Buffer, std::vector<Buffer> > stack_vec_buffer;
 	ft::map<int, int> map_int;
 
 	for (int i = 0; i < COUNT; i++)
@@ -112,5 +115,6 @@ int main(int argc, char** argv) {
 		std::cout << *it;
 	}
 	std::cout << std::endl;
+    std::cerr
 	return (0);
 }
