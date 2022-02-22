@@ -35,17 +35,20 @@ int main(int argc, char *argv[])
 		printf("listen error\n");
 
 	//클라이언트로부터 요청이 오면 연결 수락
-	clnt_addr_size = sizeof(clnt_addr);
-	clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
-	if (clnt_sock == -1)
-		printf("accept error\n");
+	while (1)
+	{
+		clnt_addr_size = sizeof(clnt_addr);
+		clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
+		if (clnt_sock == -1)
+			printf("accept error\n");
 	
-	//데이터 전송
-	char msg[] = "Hello this is server!\n";
-	write(clnt_sock, msg, sizeof(msg));
+		//데이터 전송
+		char msg[] = "HTTP/1.1 200 OK\r\nContent-Length:4\r\n\r\nhaha";
+		write(clnt_sock, msg, sizeof(msg));
 
-	//소켓들 닫기
-	close(clnt_sock);
+		//소켓들 닫기
+		close(clnt_sock);
+	}
 	close(serv_sock);
 
 	return 0;
