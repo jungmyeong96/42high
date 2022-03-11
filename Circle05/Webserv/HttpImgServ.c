@@ -82,15 +82,15 @@ void handle_500(int asock) {
     @return
 */
 void http_handler(int asock) {
-    char header[BUF_SIZE];
-    char buf[BUF_SIZE];
+    char header[BUF_SIZE]; //
+    char buf[BUF_SIZE]; //요청헤더
 
     if (read(asock, buf, BUF_SIZE) < 0) {
         perror("[ERR] Failed to read request.\n");
         handle_500(asock); return;
     }
 
-    char *method = strtok(buf, " ");
+    char *method = strtok(buf, " "); //요청헤더
     char *uri = strtok(NULL, " ");
     if (method == NULL || uri == NULL) {
         perror("[ERR] Failed to identify method, URI.\n");
@@ -99,7 +99,7 @@ void http_handler(int asock) {
 
     printf("[INFO] Handling Request: method=%s, URI=%s\n", method, uri);
 
-    char safe_uri[BUF_SIZE];
+    char safe_uri[BUF_SIZE];//응답 바디
     char *local_uri;
     struct stat st;
 
@@ -112,7 +112,7 @@ void http_handler(int asock) {
         handle_404(asock); return;
     }
 
-    int fd = open(local_uri, O_RDONLY);
+    int fd = open(local_uri, O_RDONLY); //응답할 바디값
     if (fd < 0) {
         perror("[ERR] Failed to open file.\n");
         handle_500(asock); return;
@@ -122,14 +122,11 @@ void http_handler(int asock) {
     char ct_type[40];
     find_mime(ct_type, local_uri);
     fill_header(header, 200, ct_len, ct_type);
-    printf("%s\n", header);
-    write(asock, header, strlen(header));
+    write(asock, header, strlen(header)); //
 
     int cnt;
     while ((cnt = read(fd, buf, BUF_SIZE)) > 0)
-    {    write(asock, buf, cnt);
-        printf("%s\n", buf);
-    }
+        write(asock, buf, cnt);
 }
 
 /*
