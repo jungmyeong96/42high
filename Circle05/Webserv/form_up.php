@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="ko">
   <head>
+
+  <link rel="shortcut icon" href="#">
+
   <meta charset="utf-8">
     <title>HTML</title>
     <style>
