@@ -244,7 +244,7 @@ char **setCommand(std::string command, std::string path) {
 
 int main()
 {
-	/* init server socket and listen */
+	/* init server socket and listen */ 
 	int server_socket;
 	struct sockaddr_in server_addr;
 	char **environ;
